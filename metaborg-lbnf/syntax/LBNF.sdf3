@@ -1,0 +1,97 @@
+module LBNF
+
+imports Common
+
+context-free start-symbols Grammar
+
+context-free syntax
+  
+  // A Grammar is a sequence of definitions
+  Grammar.MkGrammar = [[{Def ";\n"}*];]
+
+  // The rules of the grammar
+  Def.Rule = [[Label].[Cat] ::= [{Item " "}*]]
+
+  // Items
+  Item.Terminal  = STRING
+  Item.NTerminal = Cat
+
+  // Categories
+  Cat.ListCat = <[<Cat>]>
+  Cat.IdCat = ID
+
+  // labels with or without profiles
+  Label.LabNoP = LabelId
+  Label.LabP   = [[LabelId] [ProfItem+]]
+  Label.LabPF  = [[LabelId] [LabelId] [ProfItem+]]
+  Label.LabF   = [[LabelId] [LabelId]]
+
+  // functional labels
+  LabelId.Id       = ID
+  LabelId.Wild     = <_>
+  LabelId.ListE    = <[ ]>
+  LabelId.ListCons = <( : )>
+  LabelId.ListOne  = <( : [ ] )>
+
+  // profiles (= permutation and binding patterns)
+  ProfItem.ProfIt  = <([<IntList>], [<INT>])>
+  IntList.Ints     = <[ <{INT ","}*> ]>
+
+// separator INT ,]
+// separator IntList ,]
+// terminator nonempty ProfItem ]
+
+  // Pragmas
+  Def.Comment    = [comment [STRING]]
+  Def.Comments   = [comment [STRING] [STRING]]
+  Def.Internal   = [internal [Label].[Cat] ::= [{Item " "}*]]
+  Def.Token      = [token [ID] [Reg]]
+  Def.PosToken   = [position token [ID] [Reg]]
+  Def.Entryp     = [entrypoints [ID]]
+  Def.Separator  = [separator [MinimumSize] [Cat] [STRING]]
+  Def.Terminator = [terminator [MinimumSize] [Cat] [STRING]]
+  Def.Coercions  = [coercions [ID] [INT]]
+  Def.Rules      = [rules [ID] ::= [{RHS "|"}+]]
+
+  Def.Layout     = [layout [{STRING ", "}+]]
+  Def.LayoutStop = [layout stop [{STRING ", "}+]]
+  Def.LayoutTop  = [layout toplevel]
+
+  //separator nonempty STRING ,]
+  //separator nonempty RHS |]
+
+  RHS.MkRHS      = [[{Item " "}*]]
+
+  // List size condition
+  MinimumSize.MNonempty = [nonempty]
+  MinimumSize.MEmpty    = []
+
+context-free syntax  // regular expressions
+  Reg.RAlt   = [[Reg] | [Reg]] {left}
+  Reg.RMinus = [[Reg] - [Reg]] {non-assoc}
+  Reg.RSeq   = [[Reg] [Reg]] {left}
+
+  Reg.RStar = [[Reg]*]
+  Reg.RPlus = [[Reg]+]
+  Reg.ROpt  = [[Reg]?]
+
+  Reg.REps  = [eps]
+
+  Reg.RChar = CHAR           // single character
+  Reg.RAlts = <[<STRING>]>   // list of alternative characters
+  Reg.RSeqs = <{<STRING>}>   // character sequence
+
+  Reg.RDigit  = [digit]
+  Reg.RLetter = [letter]
+  Reg.RUpper  = [upper]
+  Reg.RLower  = [lower]
+  Reg.RAny    = [char]
+
+  Reg = [([Reg])] {bracket}
+
+context-free priorities
+  {Reg.RStar Reg.RPlus Reg.ROpt }
+  > Reg.RMinus 
+  > Reg.RSeq 
+  > Reg.RAlt
+

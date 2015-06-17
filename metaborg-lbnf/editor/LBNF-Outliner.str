@@ -1,0 +1,13 @@
+module editor/LBNF-Outliner
+
+imports
+  
+  include/LBNF
+  lib/runtime/editor/outline-library
+  lib/runtime/editor/origins
+  editor/LBNF-Outliner.generated
+
+rules
+  
+  to-outline-label = fail
+  

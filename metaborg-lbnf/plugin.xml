@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.eclipse.imp.runtime.languageDescription">
+      <language
+            extensions="cf"
+            description="LBNF"
+            language="LBNF"
+            derivedFrom="DynamicRoot"
+            validator="org.metaborg.lbnf.LBNFValidator"
+            validatorClass="org.metaborg.lbnf.LBNFValidator"
+      ></language>
+   </extension>
+   <extension
+         id="org.metaborg.lbnf.parser"
+         name="LBNF Parser"
+         point="org.eclipse.imp.runtime.parser">
+      <parser
+            class="org.metaborg.lbnf.LBNFParseController"
+            language="LBNF">
+      </parser>
+   </extension>    
+</plugin>

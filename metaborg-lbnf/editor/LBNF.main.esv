@@ -1,0 +1,33 @@
+module LBNF.main
+
+imports
+  LBNF-Colorer
+  LBNF-Completions
+  LBNF-Folding
+  LBNF-Menus
+  LBNF-Refactorings
+  LBNF-References
+  LBNF-Syntax
+  LBNF-Views
+
+language General properties
+  
+  name:          LBNF
+  id:            org.metaborg.lbnf
+  extends:       Root
+  
+  description:   "Spoofax-generated editor for the LBNF language"
+  url:           http://strategoxt.org
+  
+  extensions:    cf
+  table:         include/LBNF.tbl
+  start symbols: Grammar
+  
+  provider:      include/lbnf.ctree
+  provider:      include/lbnf-java.jar
+  
+  observer:      editor-analyze (multifile)
+  
+  on save:       editor-save
+  
+  jvm opts:      -server -Xss8m -Xmx1024m
