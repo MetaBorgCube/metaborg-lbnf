@@ -1,0 +1,101 @@
+module lbnf-to-sdf3
+
+imports src-gen/signatures/LBNF-sig
+
+rules
+
+  lbnf-to-sdf3(|filename) :
+  	MkGrammar(rs) -> 
+  	$[module [filename]
+  	  imports Common
+  	  context-free syntax
+  	    [rs']
+  	]
+  	where <alltd(set-list-separator)> rs
+  	where rs' := <filter(rule-to-prod <+ (debug(!"rule-to-prod fail: "); fail))> rs
+  	
+  rule-to-prod :
+  	Rule(LabNoP(Id(c)), IdCat(nt), items) -> $<
+  	  <nt>.<c> = <items'>
+  	> 
+  	where {| EscapeSort
+  	       : <set-meta-symbols> items
+  	       ; items' := <items-to-symbols> items
+  	       |}
+  
+  rule-to-prod :
+    Rule(LabNoP(Wild()),IdCat(nt1),[NTerminal(IdCat(nt2))]) -> $[
+      [nt1] = [nt2]
+    ]
+  	
+  items-to-symbols :
+  	[item] -> <nt-to-symbol>item
+  items-to-symbols :
+  	items -> <filter(item-to-symbol <+ (debug(!"item-to-symbol fail: "); fail)); separate-by(|" "); EscapeSort>items
+  	 	
+  id-to-symbol :
+  	IdCat("String") -> "STRING"
+  id-to-symbol :
+  	IdCat("Ident") -> "ID"
+  id-to-symbol :
+  	IdCat("Integer") -> "INT" 	
+  id-to-symbol :
+  	IdCat("CHAR") -> "CHAR" 	
+  id-to-symbol :
+  	IdCat(x) -> x
+  	
+  nt-to-symbol :
+  	NTerminal(x@IdCat(_)) -> <id-to-symbol>x
+  nt-to-symbol :
+  	NTerminal(ListCat(x@IdCat(nt))) -> $[{[<id-to-symbol>x] [sep]}[iter]]
+  	where sep := <ListSeparator <+ !"\" \""> nt
+  	where iter := <ListIterator <+ "*"> nt
+  	
+  item-to-symbol :
+  	NTerminal(_) -> <nt-to-symbol; EscapeSort>
+  	
+  item-to-symbol :
+  	Terminal(str) -> <<unescape; un-double-quote> str>
+  	
+rules
+	
+  set-meta-symbols :
+  	items -> items
+  	where 
+  	  if <oncetd(?Terminal("\"[\"") <+ Terminal("\"]\""))> items then
+  	  	rules(
+  	  	  EscapeSort : x -> $[<[x]>]
+  	  	)
+  	  else 
+  	  	rules(
+  	  	  EscapeSort : x -> $<[<x>]>
+  	  	)
+  	  end
+  	  
+  set-list-separator :
+  	Rule(LabNoP(ListE()), ListCat(IdCat(x)), []) -> <id>
+  	where rules(
+  	  ListIterator : x -> "*"
+  	)
+  	
+  set-list-separator :
+    Rule(LabNoP(ListCons()), ListCat(IdCat(x)), [NTerminal(IdCat(x)), Terminal(sep), NTerminal(ListCat(IdCat(x)))])
+    -> <id>
+    //where sep' := <unescape; un-double-quote> sep
+    where rules(
+      ListSeparator : x -> sep
+    )
+
+  set-list-separator :
+    Separator(MEmpty(), IdCat(x), sep) -> <id>
+    where rules(
+      ListSeparator : x -> sep
+      ListIterator : x -> "*"
+    )
+
+  set-list-separator :
+    Separator(MNonempty(), IdCat(x), sep) -> <id>
+    where rules(
+      ListSeparator : x -> sep
+      ListIterator : x -> "+"
+    )

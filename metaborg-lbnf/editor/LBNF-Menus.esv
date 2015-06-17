@@ -32,5 +32,6 @@ menus
   
   menu: "Generation"                   (openeditor) (realtime)
     
-    action: "Generate Java"          = generate-java
+    action: "Transform to SDF3"      = editor-lbnf-to-sdf3 (openeditor)
+//    action: "Generate Java"          = generate-java
 

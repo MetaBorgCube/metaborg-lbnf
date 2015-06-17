@@ -1,0 +1,106 @@
+module LBNF
+imports Common
+context-free syntax
+  
+  Grammar.MkGrammar = {Def ";"}*
+  
+  Def.Rule = [[Label] . [Cat] ::= [{Item " "}*]]
+  
+  Item.Terminal = STRING
+  
+  Item.NTerminal = Cat
+  
+  Cat.ListCat = <[ <Cat> ]>
+  
+  Cat.IdCat = ID
+  
+  Label.LabNoP = LabelId
+  
+  Label.LabP = [[LabelId]]
+  
+  Label.LabPF = [[LabelId] [LabelId]]
+  
+  Label.LabF = [[LabelId] [LabelId]]
+  
+  LabelId.Id = ID
+  
+  LabelId.Wild = [_]
+  
+  LabelId.ListE = <[ ]>
+  
+  LabelId.ListCons = [( : )]
+  
+  LabelId.ListOne = <( : [ ] )>
+  
+  ProfItem.ProfIt = <( [ <{IntList ","}*> ] , [ <{INT ","}*> ] )>
+  
+  IntList.Ints = <[ <{INT ","}*> ]>
+  
+  Def.Comment = [comment [STRING]]
+  
+  Def.Comments = [comment [STRING] [STRING]]
+  
+  Def.Internal = [internal [Label] . [Cat] ::= [{Item " "}*]]
+  
+  Def.Token = [token [ID] [Reg]]
+  
+  Def.PosToken = [position token [ID] [Reg]]
+  
+  Def.Entryp = [entrypoints]
+  
+  Def.Separator = [separator [MinimumSize] [Cat] [STRING]]
+  
+  Def.Terminator = [terminator [MinimumSize] [Cat] [STRING]]
+  
+  Def.Coercions = [coercions [ID] [INT]]
+  
+  Def.Rules = [rules [ID] ::= [{RHS "|"}+]]
+  
+  Def.Layout = [layout [{STRING ","}+]]
+  
+  Def.LayoutStop = [layout stop [{STRING ","}+]]
+  
+  Def.LayoutTop = [layout toplevel]
+  
+  RHS.MkRHS = {Item " "}*
+  
+  MinimumSize.MNonempty = [nonempty]
+  
+  MinimumSize.MEmpty = []
+  
+  Reg2.RSeq = [[Reg2] [Reg3]]
+  
+  Reg1.RAlt = [[Reg1] | [Reg2]]
+  
+  Reg1.RMinus = [[Reg2] - [Reg2]]
+  
+  Reg3.RStar = [[Reg3] *]
+  
+  Reg3.RPlus = [[Reg3] +]
+  
+  Reg3.ROpt = [[Reg3] ?]
+  
+  Reg3.REps = [eps]
+  
+  Reg3.RChar = Char
+  
+  Reg3.RAlts = <[ <STRING> ]>
+  
+  Reg3.RSeqs = [{ [STRING] }]
+  
+  Reg3.RDigit = [digit]
+  
+  Reg3.RLetter = [letter]
+  
+  Reg3.RUpper = [upper]
+  
+  Reg3.RLower = [lower]
+  
+  Reg3.RAny = [char]
+  
+  Reg = Reg1
+  
+  Reg1 = Reg2
+  
+  Reg2 = Reg3
+  

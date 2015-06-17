@@ -19,6 +19,7 @@ imports
 	check
 	generate
 	pp
+	lbnf-to-sdf3
 
 rules // Analysis
 	
@@ -71,6 +72,12 @@ rules // Editor services
       filename := <guarantee-extension(|$[pp.[ext]])> path;
       result   := <pp-debug> selected
 
+  editor-lbnf-to-sdf3:
+    (selected, position, ast, path, project-path) -> (filename, result)
+    with
+      filename := <guarantee-extension(|"sdf3")> path;
+      result   := <lbnf-to-sdf3(|<base-filename; remove-extension>path)> selected
+      
 rules // Debugging
 	
 	// Prints the abstract syntax ATerm of a selection.
