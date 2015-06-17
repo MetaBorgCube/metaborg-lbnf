@@ -1,5 +1,9 @@
 module lbnf-to-sdf3
 
+// to do: comments
+// to do: start symbols
+// to do: SDF3 module name should be uppercase?
+
 imports src-gen/signatures/LBNF-sig
 
 rules
@@ -10,26 +14,37 @@ rules
   	  imports Common
   	  context-free syntax
   	    [rs']
+  	  lexical syntax
+  	    [lrs]
   	]
-  	where <alltd(set-list-separator)> rs
-  	where rs' := <filter(rule-to-prod <+ (debug(!"rule-to-prod fail: "); fail))> rs
-  	
+  	where {| ListSeparator, ListIterator, ListTerminator, PreSeparator 
+  	       : <alltd(set-list-separator)> rs
+  	       ; rs' := <rules-to-prods>rs
+  	       ; lrs := <lex-to-prods>rs 
+  	       |}
+  
+  rules-to-prods =
+  	filter(rule-to-prod <+ (debug(!"rule-to-prod fail: "); fail)); 
+  	separate-by(|"\n")
+
   rule-to-prod :
-  	Rule(LabNoP(Id(c)), IdCat(nt), items) -> $<
-  	  <nt>.<c> = <items'>
-  	> 
+  	Rule(LabNoP(Id(c)), IdCat(nt), items) -> 
+  	  $<<nt>.<c> = <items'>>
   	where {| EscapeSort
   	       : <set-meta-symbols> items
   	       ; items' := <items-to-symbols> items
   	       |}
-  
+  	       
   rule-to-prod :
-    Rule(LabNoP(Wild()),IdCat(nt1),[NTerminal(IdCat(nt2))]) -> $[
-      [nt1] = [nt2]
-    ]
+    Rule(LabNoP(Wild()),IdCat(nt1),[NTerminal(IdCat(nt2))]) -> 
+      $[[nt1] = [nt2]]
+    
+  token-to-prod :
+  	Token(nt, re) -> $[[nt] = [re']]
+  	with re' := <reg-to-symbols>re
   	
-  items-to-symbols :
-  	[item] -> <nt-to-symbol>item
+  // items-to-symbols :
+  // 	[item] -> <nt-to-symbol(EscapeSort)>item
   items-to-symbols :
   	items -> <filter(item-to-symbol <+ (debug(!"item-to-symbol fail: "); fail)); separate-by(|" "); EscapeSort>items
   	 	
@@ -44,18 +59,21 @@ rules
   id-to-symbol :
   	IdCat(x) -> x
   	
-  nt-to-symbol :
-  	NTerminal(x@IdCat(_)) -> <id-to-symbol>x
-  nt-to-symbol :
-  	NTerminal(ListCat(x@IdCat(nt))) -> $[{[<id-to-symbol>x] [sep]}[iter]]
+  nt-to-symbol(escape) :
+  	NTerminal(x@IdCat(_)) -> <id-to-symbol; EscapeSort>x
+  nt-to-symbol(escape) :
+  	NTerminal(ListCat(x@IdCat(nt))) -> $[[presep][lst][term]]
   	where sep := <ListSeparator <+ !"\" \""> nt
-  	where iter := <ListIterator <+ "*"> nt
+  	where iter := <ListIterator <+ !"*"> nt
+  	where term := <ListTerminator <+ !""> nt
+  	where presep := <PreSeparator <+ !""> nt
+  	where lst := <EscapeSort>$[{[<id-to-symbol>x] [sep]}[iter]]
   	
   item-to-symbol :
-  	NTerminal(_) -> <nt-to-symbol; EscapeSort>
+  	NTerminal(_) -> <nt-to-symbol(escape)>
   	
   item-to-symbol :
-  	Terminal(str) -> <<unescape; un-double-quote> str>
+  	Terminal(str) -> <<unescape; un-double-quote; unescape> str>
   	
 rules
 	
@@ -85,7 +103,23 @@ rules
     where rules(
       ListSeparator : x -> sep
     )
+    
+  set-list-separator :
+    Rule(LabNoP(ListCons()),ListCat(IdCat(x)),[Terminal(sep),NTerminal(IdCat(x)),NTerminal(ListCat(IdCat(x)))])
+    -> <id>
+    where presep := <unescape; un-double-quote> sep
+    where rules(
+      ListSeparator : x -> sep
+      PreSeparator  : x -> presep
+    )
+    // such a rule comes from
+    // []  . [Exp] ::= ;
+    // (:) . [Exp] ::= "," Exp [Exp] ;
+    // it means a list that starts with a sep, since it always preceded by another element
+    // seems to be a way to get non-empty lists, but also used in this context
+    // AppDecl     . Exp4 ::= "<" Ident [Exp] ">" ;
 
+    
   set-list-separator :
     Separator(MEmpty(), IdCat(x), sep) -> <id>
     where rules(
@@ -99,3 +133,50 @@ rules
       ListSeparator : x -> sep
       ListIterator : x -> "+"
     )
+    
+  set-list-separator :
+    Terminator(MEmpty(), IdCat(x), sep) -> <id>
+    where presep := <unescape; un-double-quote> sep
+    where rules(
+      ListSeparator : x -> sep
+      ListTerminator : x -> sep
+    )
+
+ 
+rules // regular expressions
+	
+  lex-to-prods = 
+  	filter(token-to-prod); separate-by(|"\n")
+  
+  reg-to-symbols :
+  	RAlt(re1, re2) -> $[[<reg-to-symbols>re1] | [<reg-to-symbols>re2]]
+  reg-to-symbols :
+  	RMinus(re1, re2) -> $[/* [<reg-to-symbols>re1] - [<reg-to-symbols>re2] */]
+  reg-to-symbols :
+  	RSeq(re1, re2) -> $[[<reg-to-symbols>re1] [<reg-to-symbols>re2]]  
+  reg-to-symbols :
+  	RStar(re) -> $[([<reg-to-symbols>re])*]  
+  reg-to-symbols :
+  	RPlus(re) -> $[([<reg-to-symbols>re])+]  
+  reg-to-symbols :
+  	ROpt(re) -> $[([<reg-to-symbols>re])?] 
+  	
+  reg-to-symbols :
+  	REps() -> $[ ]  
+  reg-to-symbols :
+  	RChar(c) -> c
+  reg-to-symbols :
+  	RAlts(x) -> x 	
+  reg-to-symbols :
+  	RSeqs(x) -> x
+  	
+  reg-to-symbols :
+  	RLetter() -> $<[A-Za-z]>     
+  reg-to-symbols :
+  	RUpper() -> $<[A-Z]>        
+  reg-to-symbols :
+  	RLower() -> $<[a-z]>   
+  reg-to-symbols :
+  	RAny() -> $<~[]>         
+  reg-to-symbols :
+  	RDigit() -> $<[0-9]>         
