@@ -3,6 +3,9 @@ module lbnf-to-sdf3
 // to do: comments
 // to do: start symbols
 // to do: SDF3 module name should be uppercase?
+// to do: remove underscore from identifiers
+// to do: escape special characters in character classes 
+// to do: expression productions to use priorities
 
 imports src-gen/signatures/LBNF-sig
 
@@ -13,15 +16,16 @@ rules
   	$[module [filename]
   	  imports Common
   	  context-free syntax
-  	    [rs']
+  	    [rs'']
   	  lexical syntax
   	    [lrs]
   	]
-  	where {| ListSeparator, ListIterator, ListTerminator, PreSeparator 
-  	       : <alltd(set-list-separator)> rs
-  	       ; rs' := <rules-to-prods>rs
-  	       ; lrs := <lex-to-prods>rs 
-  	       |}
+  	with rs' := <desugar-all>rs;
+  	     {| ListSeparator, ListIterator, ListTerminator, PreSeparator 
+  	      : <alltd(set-list-separator)> rs'
+  	      ; rs'' := <rules-to-prods>rs'
+  	      ; lrs := <lex-to-prods>rs' 
+  	      |}
   
   rules-to-prods =
   	filter(rule-to-prod <+ (debug(!"rule-to-prod fail: "); fail)); 
@@ -30,10 +34,10 @@ rules
   rule-to-prod :
   	Rule(LabNoP(Id(c)), IdCat(nt), items) -> 
   	  $<<nt>.<c> = <items'>>
-  	where {| EscapeSort
-  	       : <set-meta-symbols> items
-  	       ; items' := <items-to-symbols> items
-  	       |}
+  	with {| EscapeSort
+  	      : <set-meta-symbols> items
+  	      ; items' := <items-to-symbols> items
+  	      |}
   	       
   rule-to-prod :
     Rule(LabNoP(Wild()),IdCat(nt1),[NTerminal(IdCat(nt2))]) -> 
@@ -43,8 +47,8 @@ rules
   	Token(nt, re) -> $[[nt] = [re']]
   	with re' := <reg-to-symbols>re
   	
-  // items-to-symbols :
-  // 	[item] -> <nt-to-symbol(EscapeSort)>item
+  items-to-symbols :
+  	[NTerminal(x@IdCat(_))] -> <id-to-symbol>x
   items-to-symbols :
   	items -> <filter(item-to-symbol <+ (debug(!"item-to-symbol fail: "); fail)); separate-by(|" "); EscapeSort>items
   	 	
@@ -63,11 +67,11 @@ rules
   	NTerminal(x@IdCat(_)) -> <id-to-symbol; EscapeSort>x
   nt-to-symbol(escape) :
   	NTerminal(ListCat(x@IdCat(nt))) -> $[[presep][lst][term]]
-  	where sep := <ListSeparator <+ !"\" \""> nt
-  	where iter := <ListIterator <+ !"*"> nt
-  	where term := <ListTerminator <+ !""> nt
-  	where presep := <PreSeparator <+ !""> nt
-  	where lst := <EscapeSort>$[{[<id-to-symbol>x] [sep]}[iter]]
+  	with sep := <ListSeparator <+ !"\" \""> nt
+  	with iter := <ListIterator <+ !"*"> nt
+  	with term := <ListTerminator <+ !""> nt
+  	with presep := <PreSeparator <+ !""> nt
+  	with lst := <EscapeSort>$[{[<id-to-symbol>x] [sep]}[iter]]
   	
   item-to-symbol :
   	NTerminal(_) -> <nt-to-symbol(escape)>
@@ -79,7 +83,7 @@ rules
 	
   set-meta-symbols :
   	items -> items
-  	where 
+  	with 
   	  if <oncetd(?Terminal("\"[\"") <+ Terminal("\"]\""))> items then
   	  	rules(
   	  	  EscapeSort : x -> $[<[x]>]
@@ -92,7 +96,7 @@ rules
   	  
   set-list-separator :
   	Rule(LabNoP(ListE()), ListCat(IdCat(x)), []) -> <id>
-  	where rules(
+  	with rules(
   	  ListIterator : x -> "*"
   	)
   	
@@ -100,15 +104,15 @@ rules
     Rule(LabNoP(ListCons()), ListCat(IdCat(x)), [NTerminal(IdCat(x)), Terminal(sep), NTerminal(ListCat(IdCat(x)))])
     -> <id>
     //where sep' := <unescape; un-double-quote> sep
-    where rules(
+    with rules(
       ListSeparator : x -> sep
     )
     
   set-list-separator :
     Rule(LabNoP(ListCons()),ListCat(IdCat(x)),[Terminal(sep),NTerminal(IdCat(x)),NTerminal(ListCat(IdCat(x)))])
     -> <id>
-    where presep := <unescape; un-double-quote> sep
-    where rules(
+    with presep := <unescape; un-double-quote> sep
+    with rules(
       ListSeparator : x -> sep
       PreSeparator  : x -> presep
     )
@@ -122,27 +126,57 @@ rules
     
   set-list-separator :
     Separator(MEmpty(), IdCat(x), sep) -> <id>
-    where rules(
+    with rules(
       ListSeparator : x -> sep
       ListIterator : x -> "*"
     )
 
   set-list-separator :
     Separator(MNonempty(), IdCat(x), sep) -> <id>
-    where rules(
+    with rules(
       ListSeparator : x -> sep
       ListIterator : x -> "+"
     )
     
   set-list-separator :
     Terminator(MEmpty(), IdCat(x), sep) -> <id>
-    where presep := <unescape; un-double-quote> sep
-    where rules(
+    with presep := <unescape; un-double-quote> sep
+    with rules(
       ListSeparator : x -> sep
-      ListTerminator : x -> sep
+      ListTerminator : x -> presep
+    )
+    
+  set-list-separator :
+    Terminator(MNonempty(), IdCat(x), sep) -> <id>
+    with term := <unescape; un-double-quote> sep
+    with rules(
+      ListTerminator : x -> term
+      ListIterator : x -> "+"
     )
 
- 
+rules 
+
+  desugar-all = 
+  	remove-underscores;
+  	innermost(desugar)
+
+  desugar :
+  	[Terminal("\"[]\"")] -> [Terminal("\"[\""), Terminal("\"]\"")]
+  	
+  remove-underscores =
+  	alltd(remove-underscores-id)
+  	
+  remove-underscores-id :
+  	Id(x) -> Id(y)
+  	with y := <filter-underscores> x
+  	
+  remove-underscores-id :
+  	IdCat(x) -> IdCat(y)
+  	with y := <filter-underscores> x
+  	
+  filter-underscores =
+  	explode-string; filter(not(?95)); implode-string
+  	
 rules // regular expressions
 	
   lex-to-prods = 
@@ -166,7 +200,9 @@ rules // regular expressions
   reg-to-symbols :
   	RChar(c) -> c
   reg-to-symbols :
-  	RAlts(x) -> x 	
+  	RAlts(x) -> $<[<y>]>
+  	with y := <unescape; un-double-quote> x
+  	// characters outside of A-Za-z0-9 should be escaped
   reg-to-symbols :
   	RSeqs(x) -> x
   	
