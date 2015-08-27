@@ -1,0 +1,10 @@
+module Calc
+imports Common
+context-free syntax
+  Exp.EAdd = [[Exp] + [Exp1]]
+  Exp.ESub = [[Exp] - [Exp1]]
+  Exp1.EMul = [[Exp1] * [Exp2]]
+  Exp1.EDiv = [[Exp1] / [Exp2]]
+  Exp2.EInt = [[INT]]
+lexical syntax
+  

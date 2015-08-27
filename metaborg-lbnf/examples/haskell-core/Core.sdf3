@@ -1,0 +1,50 @@
+module Core
+imports Common
+context-free syntax
+  Module.Module = [%module [ID] [{Tdef ";"}*]";" [{Vdefg ";"}*]";"]
+  Tdef.Data = [%data [QualIdent] [{Tbind ""}*] = { [{Cdef ";"}+] }]
+  Tdef.Newtype = [%newtype [QualIdent] [{Tbind ""}*] [MaybeTy]]
+  MaybeTy.JustTy = [= [Ty]]
+  MaybeTy.NoTy = []
+  Cdef.Constr = [[QualIdent] [{ATbind ""}*] [{Tyt ""}*]""]
+  Tyt.TT = Ty2
+  Vdefg.Rec = [%rec { [{Vdef ";"}+] }]
+  Vdefg.Nonrec = Vdef
+  Vdef.VdefQ = [[QualIdent] :: [Ty] = [Exp]]
+  Vdef.VdefU = [[ID] :: [Ty] = [Exp]]
+  Exp2.Var = ID
+  Exp2.Dcon = QualIdent
+  Exp2.Litc = Lit
+  Exp1.App = [[Exp1] [Exp2]]
+  Exp1.Appt = [[Exp1] @ [Ty2]]
+  Exp.Lams = [\ [{Bind " "}*] -> [Exp]]
+  Exp.Let = [%let [Vdefg] %in [Exp]]
+  Exp.Case = [%case [Exp2] %of [Vbind] { [{Alt ";"}+] }]
+  Exp.Coerce = [%coerce [Ty2] [Exp]]
+  Exp.Note = [%note [STRING] [Exp]]
+  Exp.External = [%external [STRING] [Ty]]
+  Bind.Vb = Vbind
+  Bind.Tb = [@ [Tbind]]
+  Alt.Acon = [[QualIdent] [{ATbind ""}*] [{Vbind ""}*]"" -> [Exp]]
+  Alt.Alit = [[Lit] -> [Exp]]
+  Alt.Adefault = [%_ -> [Exp]]
+  Vbind.Vbind = [( [ID] :: [Ty] )]
+  Tbind.TbindPair = [( [ID] :: [Kind1] )]
+  Tbind.TbindLift = ID
+  ATbind.ATbind = [@ [Tbind]]
+  Ty2.Tvar = ID
+  Ty2.Tcon = QualIdent
+  Ty1.Tapp = [[Ty1] [Ty2]]
+  Ty.TArrow = [[Ty1] -> [Ty]]
+  Ty.Tforalls = [%forall [{Tbind ""}*] . [Ty]]
+  Kind1.Klifted = [*]
+  Kind1.Kunlifted = [#]
+  Kind1.Kopen = [?]
+  Kind.Karrow = [[Kind1] -> [Kind]]
+  Lit.Lint = [( [INT] :: [Ty2] )]
+  Lit.Lrational = [( [Double] :: [Ty2] )]
+  Lit.Lchar = [( [Char] :: [Ty2] )]
+  Lit.Lstring = [( [STRING] :: [Ty2] )]
+  QualIdent.Qual = [[ID] . [ID]]
+lexical syntax
+  

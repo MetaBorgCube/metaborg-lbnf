@@ -1,0 +1,18 @@
+module JavaletteLight
+imports Common
+context-free syntax
+  Prog.Fun = [[Typ] [ID] ( ) { [{Stm ""}*]"" }]
+  Stm.SDecl = [[Typ] [[ID] ;]
+  Stm.SAss = [[ID] = [Exp] ;]
+  Stm.SIncr = [[ID] ++ ;]
+  Stm.SWhile = [while ( [Exp] ) { [{Stm ""}*]"" }]
+  Exp.ELt = [[Exp1] < [Exp1]]
+  Exp1.EPlus = [[Exp1] + [Exp2]]
+  Exp2.ETimes = [[Exp2] * [Exp3]]
+  Exp3.EVar = ID
+  Exp3.EInt = INT
+  Exp3.EDouble = Double
+  Typ.TInt = [int]
+  Typ.TDouble = [double]
+lexical syntax
+  

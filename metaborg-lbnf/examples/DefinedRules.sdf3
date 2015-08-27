@@ -1,0 +1,22 @@
+module DefinedRules
+imports Common
+context-free syntax
+  Stm.Assign = [[ID] = [Exp]]
+  Stm.Block = [{ [{Stm ";"}*]";" }]
+  Stm.While = [while ( [Exp] ) [Stm]]
+  Stm.If = [if ( [Exp] ) [Stm] else [Stm] endif]
+  Stm.if = [if ( [Exp] ) [Stm] endif]
+  Stm.for = [for ( [Stm] ; [Exp] ; [Stm] ) [Stm]]
+  Stm.inc = [[ID] ++]
+  Op = Op1
+  Op = Op2
+  Op1.Less = [<]
+  Op1.Equal = [==]
+  Op2.Plus = [+]
+  Op2.Minus = [-]
+  Exp.op = [[Exp1] [Op1] [Exp1]]
+  Exp1.op = [[Exp1] [Op2] [Exp2]]
+  Exp2.EInt = [[INT]]
+  Exp2.EVar = [[ID]]
+lexical syntax
+  

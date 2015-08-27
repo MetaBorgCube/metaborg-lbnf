@@ -1,0 +1,221 @@
+module C
+imports Common
+context-free syntax
+  Program.Progr = [[{Externaldeclaration " "}*]]
+  Externaldeclaration.Afunc = Functiondef
+  Externaldeclaration.Global = Dec
+  Functiondef.OldFunc = [[{Declarationspecifier " "}*] [Declarator] [{Dec " "}*] [Compoundstm]]
+  Functiondef.NewFunc = [[{Declarationspecifier " "}*] [Declarator] [Compoundstm]]
+  Functiondef.OldFuncInt = [[Declarator] [{Dec " "}*] [Compoundstm]]
+  Functiondef.NewFuncInt = [[Declarator] [Compoundstm]]
+  Dec.NoDeclarator = [[{Declarationspecifier " "}*] ;]
+  Dec.Declarators = [[{Declarationspecifier " "}*] [{Initdeclarator ","}*] ;]
+  Declarationspecifier.Type = Typespecifier
+  Declarationspecifier.Storage = Storageclassspecifier
+  Declarationspecifier.SpecProp = Typequalifier
+  Initdeclarator.OnlyDecl = Declarator
+  Initdeclarator.InitDecl = [[Declarator] = [Initializer]]
+  Typespecifier.Tvoid = [void]
+  Typespecifier.Tchar = [char]
+  Typespecifier.Tshort = [short]
+  Typespecifier.Tint = [int]
+  Typespecifier.Tlong = [long]
+  Typespecifier.Tfloat = [float]
+  Typespecifier.Tdouble = [double]
+  Typespecifier.Tsigned = [signed]
+  Typespecifier.Tunsigned = [unsigned]
+  Typespecifier.Tstruct = Structorunionspec
+  Typespecifier.Tenum = Enumspecifier
+  Typespecifier.Tname = [Typedef_name]
+  Storageclassspecifier.MyType = [typedef]
+  Storageclassspecifier.GlobalPrograms = [extern]
+  Storageclassspecifier.LocalProgram = [static]
+  Storageclassspecifier.LocalBlock = [auto]
+  Storageclassspecifier.LocalReg = [register]
+  Typequalifier.Const = [const]
+  Typequalifier.NoOptim = [volatile]
+  Structorunionspec.Tag = [[Structorunion] [ID] { [{Structdec " "}*] }]
+  Structorunionspec.Unique = [[Structorunion] { [{Structdec " "}*] }]
+  Structorunionspec.TagType = [[Structorunion] [ID]]
+  Structorunion.Struct = [struct]
+  Structorunion.Union = [union]
+  Structdec.Structen = [[{Specqual " "}*] [{Structdeclarator ","}*] ;]
+  Specqual.TypeSpec = Typespecifier
+  Specqual.QualSpec = Typequalifier
+  Structdeclarator.Decl = Declarator
+  Structdeclarator.Field = [: [Constantexpression]]
+  Structdeclarator.DecField = [[Declarator] : [Constantexpression]]
+  Enumspecifier.EnumDec = [enum { [{Enumerator ","}*] }]
+  Enumspecifier.EnumName = [enum [ID] { [{Enumerator ","}*] }]
+  Enumspecifier.EnumVar = [enum [ID]]
+  Enumerator.Plain = ID
+  Enumerator.EnumInit = [[ID] = [Constantexpression]]
+  Declarator.BeginPointer = [[Pointer] [Directdeclarator]]
+  Declarator.NoPointer = Directdeclarator
+  Directdeclarator.Name = ID
+  Directdeclarator.ParenDecl = [( [Declarator] )]
+  Directdeclarator.InnitArray = <<Directdeclarator> [ <Constantexpression> ]>
+  Directdeclarator.Incomplete = <<Directdeclarator> [ ]>
+  Directdeclarator.NewFuncDec = [[Directdeclarator] ( [Parametertype] )]
+  Directdeclarator.OldFuncDef = [[Directdeclarator] ( [{ID ","}*] )]
+  Directdeclarator.OldFuncDec = [[Directdeclarator] ( )]
+  Pointer.Point = [*]
+  Pointer.PointQual = [* [{Typequalifier " "}*]]
+  Pointer.PointPoint = [* [Pointer]]
+  Pointer.PointQualPoint = [* [{Typequalifier " "}*] [Pointer]]
+  Parametertype.AllSpec = Parameterdeclarations
+  Parametertype.More = [[Parameterdeclarations] , ...]
+  Parameterdeclarations.ParamDec = Parameterdeclaration
+  Parameterdeclarations.MoreParamDec = [[Parameterdeclarations] , [Parameterdeclaration]]
+  Parameterdeclaration.OnlyType = [[{Declarationspecifier " "}*]]
+  Parameterdeclaration.TypeAndParam = [[{Declarationspecifier " "}*] [Declarator]]
+  Parameterdeclaration.Abstract = [[{Declarationspecifier " "}*] [Abstractdeclarator]]
+  Initializer.InitExpr = Exp2
+  Initializer.InitListOne = [{ [Initializers] }]
+  Initializer.InitListTwo = [{ [Initializers] , }]
+  Initializers.AnInit = Initializer
+  Initializers.MoreInit = [[Initializers] , [Initializer]]
+  Typename.PlainType = [[{Specqual " "}*]]
+  Typename.ExtendedType = [[{Specqual " "}*] [Abstractdeclarator]]
+  Abstractdeclarator.PointerStart = Pointer
+  Abstractdeclarator.Advanced = Dirabsdec
+  Abstractdeclarator.PointAdvanced = [[Pointer] [Dirabsdec]]
+  Dirabsdec.WithinParentes = [( [Abstractdeclarator] )]
+  Dirabsdec.Array = <[ ]>
+  Dirabsdec.InitiatedArray = <[ <Constantexpression> ]>
+  Dirabsdec.UnInitiated = <<Dirabsdec> [ ]>
+  Dirabsdec.Initiated = <<Dirabsdec> [ <Constantexpression> ]>
+  Dirabsdec.OldFunction = [( )]
+  Dirabsdec.NewFunction = [( [Parametertype] )]
+  Dirabsdec.OldFuncExpr = [[Dirabsdec] ( )]
+  Dirabsdec.NewFuncExpr = [[Dirabsdec] ( [Parametertype] )]
+  Stm.LabelS = Labeledstm
+  Stm.CompS = Compoundstm
+  Stm.ExprS = Expressionstm
+  Stm.SelS = Selectionstm
+  Stm.IterS = Iterstm
+  Stm.JumpS = Jumpstm
+  Labeledstm.SlabelOne = [[ID] : [Stm]]
+  Labeledstm.SlabelTwo = [case [Constantexpression] : [Stm]]
+  Labeledstm.SlabelThree = [default : [Stm]]
+  Compoundstm.ScompOne = [{ }]
+  Compoundstm.ScompTwo = [{ [{Stm " "}*] }]
+  Compoundstm.ScompThree = [{ [{Dec " "}*] }]
+  Compoundstm.ScompFour = [{ [{Dec " "}*] [{Stm " "}*] }]
+  Expressionstm.SexprOne = [;]
+  Expressionstm.SexprTwo = [[Exp] ;]
+  Selectionstm.SselOne = [if ( [Exp] ) [Stm]]
+  Selectionstm.SselTwo = [if ( [Exp] ) [Stm] else [Stm]]
+  Selectionstm.SselThree = [switch ( [Exp] ) [Stm]]
+  Iterstm.SiterOne = [while ( [Exp] ) [Stm]]
+  Iterstm.SiterTwo = [do [Stm] while ( [Exp] ) ;]
+  Iterstm.SiterThree = [for ( [Expressionstm] [Expressionstm] ) [Stm]]
+  Iterstm.SiterFour = [for ( [Expressionstm] [Expressionstm] [Exp] ) [Stm]]
+  Jumpstm.SjumpOne = [goto [ID] ;]
+  Jumpstm.SjumpTwo = [continue ;]
+  Jumpstm.SjumpThree = [break ;]
+  Jumpstm.SjumpFour = [return ;]
+  Jumpstm.SjumpFive = [return [Exp] ;]
+  Exp.Ecomma = [[Exp] , [Exp2]]
+  Exp2.Eassign = [[Exp15] [Assignmentop] [Exp2]]
+  Exp3.Econdition = [[Exp4] ? [Exp] : [Exp3]]
+  Exp4.Elor = [[Exp4] || [Exp5]]
+  Exp5.Eland = [[Exp5] && [Exp6]]
+  Exp6.Ebitor = [[Exp6] | [Exp7]]
+  Exp7.Ebitexor = [[Exp7] ^ [Exp8]]
+  Exp8.Ebitand = [[Exp8] & [Exp9]]
+  Exp9.Eeq = [[Exp9] == [Exp10]]
+  Exp9.Eneq = [[Exp9] != [Exp10]]
+  Exp10.Elthen = [[Exp10] < [Exp11]]
+  Exp10.Egrthen = [[Exp10] > [Exp11]]
+  Exp10.Ele = [[Exp10] <= [Exp11]]
+  Exp10.Ege = [[Exp10] >= [Exp11]]
+  Exp11.Eleft = [[Exp11] << [Exp12]]
+  Exp11.Eright = [[Exp11] >> [Exp12]]
+  Exp12.Eplus = [[Exp12] + [Exp13]]
+  Exp12.Eminus = [[Exp12] - [Exp13]]
+  Exp13.Etimes = [[Exp13] * [Exp14]]
+  Exp13.Ediv = [[Exp13] / [Exp14]]
+  Exp13.Emod = [[Exp13] % [Exp14]]
+  Exp14.Etypeconv = [( [Typename] ) [Exp14]]
+  Exp15.Epreinc = [++ [Exp15]]
+  Exp15.Epredec = [-- [Exp15]]
+  Exp15.Epreop = [[Unaryoperator] [Exp14]]
+  Exp15.Ebytesexpr = [sizeof [Exp15]]
+  Exp15.Ebytestype = [sizeof ( [Typename] )]
+  Exp16.Earray = <<Exp16> [ <Exp> ]>
+  Exp16.Efunk = [[Exp16] ( )]
+  Exp16.Efunkpar = [[Exp16] ( [{Exp2 ","}*] )]
+  Exp16.Eselect = [[Exp16] . [ID]]
+  Exp16.Epoint = [[Exp16] -> [ID]]
+  Exp16.Epostinc = [[Exp16] ++]
+  Exp16.Epostdec = [[Exp16] --]
+  Exp17.Evar = ID
+  Exp17.Econst = Constant
+  Exp17.Estring = STRING
+  Constant.Efloat = Double
+  Constant.Echar = Char
+  Constant.Eunsigned = Unsigned
+  Constant.Elong = Long
+  Constant.Eunsignlong = UnsignedLong
+  Constant.Ehexadec = Hexadecimal
+  Constant.Ehexaunsign = HexUnsigned
+  Constant.Ehexalong = HexLong
+  Constant.Ehexaunslong = HexUnsLong
+  Constant.Eoctal = Octal
+  Constant.Eoctalunsign = OctalUnsigned
+  Constant.Eoctallong = OctalLong
+  Constant.Eoctalunslong = OctalUnsLong
+  Constant.Ecdouble = CDouble
+  Constant.Ecfloat = CFloat
+  Constant.Eclongdouble = CLongDouble
+  Constant.Eint = INT
+  Constantexpression.Especial = Exp3
+  Exp = Exp2
+  Exp2 = Exp3
+  Exp3 = Exp4
+  Exp4 = Exp5
+  Exp5 = Exp6
+  Exp6 = Exp7
+  Exp7 = Exp8
+  Exp8 = Exp9
+  Exp9 = Exp10
+  Exp10 = Exp11
+  Exp11 = Exp12
+  Exp12 = Exp13
+  Exp13 = Exp14
+  Exp14 = Exp15
+  Exp15 = Exp16
+  Exp16 = Exp17
+  Unaryoperator.Address = [&]
+  Unaryoperator.Indirection = [*]
+  Unaryoperator.Plus = [+]
+  Unaryoperator.Negative = [-]
+  Unaryoperator.Complement = [~]
+  Unaryoperator.Logicalneg = [!]
+  Assignmentop.Assign = [=]
+  Assignmentop.AssignMul = [*=]
+  Assignmentop.AssignDiv = [/=]
+  Assignmentop.AssignMod = [%=]
+  Assignmentop.AssignAdd = [+=]
+  Assignmentop.AssignSub = [-=]
+  Assignmentop.AssignLeft = [<<=]
+  Assignmentop.AssignRight = [>>=]
+  Assignmentop.AssignAnd = [&=]
+  Assignmentop.AssignXor = [^=]
+  Assignmentop.AssignOr = [|=]
+lexical syntax
+  Unsigned = [123456789] ([0-9])* 'u' | 'U'
+  Long = [123456789] ([0-9])* 'l' | 'L'
+  UnsignedLong = [123456789] ([0-9])* 'u' 'l' | 'U' 'L'
+  Hexadecimal = '0' 'x' | 'X' ([0-9] | [abcdef] | [ABCDEF])+
+  HexUnsigned = '0' 'x' | 'X' ([0-9] | [abcdef] | [ABCDEF])+ 'u' | 'U'
+  HexLong = '0' 'x' | 'X' ([0-9] | [abcdef] | [ABCDEF])+ 'l' | 'L'
+  HexUnsLong = '0' 'x' | 'X' ([0-9] | [abcdef] | [ABCDEF])+ 'u' 'l' | 'U' 'L'
+  Octal = '0' ([01234567])*
+  OctalUnsigned = '0' ([01234567])* 'u' | 'U'
+  OctalLong = '0' ([01234567])* 'l' | 'L'
+  OctalUnsLong = '0' ([01234567])* 'u' 'l' | 'U' 'L'
+  CDouble = ([0-9])+ '.' | '.' ([0-9])+ ('e' | 'E' ('-')? ([0-9])+)? | ([0-9])+ 'e' | 'E' ('-')? ([0-9])+ | ([0-9])+ '.' ([0-9])+ 'E' ('-')? ([0-9])+
+  CFloat = ([0-9])+ '.' ([0-9])+ | ([0-9])+ '.' | '.' ([0-9])+ ('e' | 'E' ('-')? ([0-9])+)? 'f' | 'F' | ([0-9])+ 'e' | 'E' ('-')? ([0-9])+ 'f' | 'F'
+  CLongDouble = ([0-9])+ '.' ([0-9])+ | ([0-9])+ '.' | '.' ([0-9])+ ('e' | 'E' ('-')? ([0-9])+)? 'l' | 'L' | ([0-9])+ 'e' | 'E' ('-')? ([0-9])+ 'l' | 'L'

@@ -1,0 +1,39 @@
+module fstStudio
+imports Common
+context-free syntax
+  Program.Prog = [[{Def ";"}*]]
+  Def.Declaration = [< [ID] ,[{ID ","}*] > ::= [Exp]]
+  Def.Main = [< main > ::= [Exp]]
+  Def.Import = [import ,[{ID ","}*]]
+  Exp.LongReplace = [[Exp] @-> [Exp1]]
+  Exp.Restriction = [[Exp] => [Exp1] _ [Exp1]]
+  Exp.Replacement = [[Exp] -> [Exp1]]
+  Exp.CReplacement = [[Exp] -> [Exp1] || [Exp1] _ [Exp1]]
+  Exp.CSReplacement = [[Exp] -> [Exp1] // [Exp1] _ [Exp1]]
+  Exp.Composition = [[Exp] .o. [Exp1]]
+  Exp.CrossProduct = [[Exp] .x. [Exp1]]
+  Exp = Exp1
+  Exp1.Markup = [[Exp2] ... [Exp2]]
+  Exp1.Minus = [[Exp1] - [Exp2]]
+  Exp1.Intersect = [[Exp1] & [Exp2]]
+  Exp1.Union = [[Exp1] | [Exp2]]
+  Exp1 = Exp2
+  Exp2.Concat = [[Exp2] [Exp3]]
+  Exp2 = Exp3
+  Exp3.Containment = [$ [Exp4]]
+  Exp3.TComplement = [\ [Exp4]]
+  Exp3.Complement = [~ [Exp4]]
+  Exp3 = Exp4
+  Exp4.NConcat = [[Exp4] ^ [INT]]
+  Exp4.AppDecl = [< [ID] ,[{Exp ","}*] >]
+  Exp4.Star = [[Exp4] *]
+  Exp4.Plus = [[Exp4] +]
+  Exp4.Symbol = [[STRING]]
+  Exp4.Variable = [[ID]]
+  Exp4.Concats = [{ [STRING] }]
+  Exp4.Any = [?]
+  Exp4.Epsilon = [0]
+  Exp4.Relation = [[STRING] : [STRING]]
+  Exp4.Boundary = [.#.]
+lexical syntax
+  

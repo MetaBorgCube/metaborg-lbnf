@@ -3,15 +3,15 @@ imports Common
 context-free syntax
   Grammar.MkGrammar = [[{Def ";"}*]]
   Def.Rule = [[Label] . [Cat] ::= [{Item " "}*]]
-  Item.Terminal = [[STRING]]
-  Item.NTerminal = [[Cat]]
+  Item.Terminal = STRING
+  Item.NTerminal = Cat
   Cat.ListCat = <[ <Cat> ]>
-  Cat.IdCat = [[ID]]
-  Label.LabNoP = [[LabelId]]
-  Label.LabP = [[LabelId] [{ProfItem " "}*]]
-  Label.LabPF = [[LabelId] [LabelId] [{ProfItem " "}*]]
+  Cat.IdCat = ID
+  Label.LabNoP = LabelId
+  Label.LabP = [[LabelId] [{ProfItem " "}+]]
+  Label.LabPF = [[LabelId] [LabelId] [{ProfItem " "}+]]
   Label.LabF = [[LabelId] [LabelId]]
-  LabelId.Id = [[ID]]
+  LabelId.Id = ID
   LabelId.Wild = [_]
   LabelId.ListE = <[ ]>
   LabelId.ListCons = [( : )]
@@ -41,7 +41,7 @@ context-free syntax
   Reg3.RPlus = [[Reg3] +]
   Reg3.ROpt = [[Reg3] ?]
   Reg3.REps = [eps]
-  Reg3.RChar = [[Char]]
+  Reg3.RChar = Char
   Reg3.RAlts = <[ <STRING> ]>
   Reg3.RSeqs = [{ [STRING] }]
   Reg3.RDigit = [digit]

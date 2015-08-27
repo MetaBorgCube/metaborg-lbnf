@@ -1,0 +1,40 @@
+module cpp
+imports Common
+context-free syntax
+  Program.PDefs = [[{Def ""}*]""]
+  Def.DFun = [[Type] [Id] ( [{Arg ","}*] ) { [{Stm ""}*]"" }]
+  Arg.ADecl = [[Type] [Id]]
+  Stm.SExp = [[Exp] ;]
+  Stm.SDecls = [[Type] [{Id ","}+] ;]
+  Stm.SInit = [[Type] [Id] = [Exp] ;]
+  Stm.SReturn = [return [Exp] ;]
+  Stm.SReturnVoid = [return ;]
+  Stm.SWhile = [while ( [Exp] ) [Stm]]
+  Stm.SBlock = [{ [{Stm ""}*]"" }]
+  Stm.SIfElse = [if ( [Exp] ) [Stm] else [Stm]]
+  Exp15.ETrue = [true]
+  Exp15.EFalse = [false]
+  Exp15.EInt = INT
+  Exp15.EDouble = Double
+  Exp15.EString = STRING
+  Exp15.EId = Id
+  Exp15.EApp = [[Id] ( [{Exp ","}*] )]
+  Exp14.EPIncr = [[Exp15] ++]
+  Exp14.EPDecr = [[Exp15] --]
+  Exp13.EIncr = [++ [Exp14]]
+  Exp13.EDecr = [-- [Exp14]]
+  Exp12.ETimes = [[Exp12] * [Exp13]]
+  Exp12.EDiv = [[Exp12] / [Exp13]]
+  Exp11.EPlus = [[Exp11] + [Exp12]]
+  Exp11.EMinus = [[Exp11] - [Exp12]]
+  Exp9.ELt = [[Exp9] < [Exp10]]
+  Exp9.EGt = [[Exp9] > [Exp10]]
+  Exp9.ELtEq = [[Exp9] <= [Exp10]]
+  Exp9.EGtEq = [[Exp9] >= [Exp10]]
+  Exp8.EEq = [[Exp8] == [Exp9]]
+  Exp8.ENEq = [[Exp8] != [Exp9]]
+  Exp4.EAnd = [[Exp4] && [Exp5]]
+  Exp3.EOr = [[Exp3] || [Exp4]]
+  Exp2.EAss = [[Exp3] = [Exp2]]
+lexical syntax
+  Id = [A-Za-z] ([A-Za-z] | [0-9] | '_')*

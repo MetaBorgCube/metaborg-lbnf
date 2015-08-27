@@ -1,0 +1,1445 @@
+[ Entryp(["ProgramFile"])
+, Rule(
+    LabNoP(Id("Prpkg"))
+  , IdCat("ProgramFile")
+  , [ Terminal("\"package\"")
+    , NTerminal(ListCat(IdCat("Ident")))
+    , NTerminal(ListCat(IdCat("Semi")))
+    , NTerminal(ListCat(IdCat("Import")))
+    , NTerminal(ListCat(IdCat("TypeDecl")))
+    ]
+  )
+, Rule(
+    LabNoP(Id("ProgF"))
+  , IdCat("ProgramFile")
+  , [NTerminal(ListCat(IdCat("Import"))), NTerminal(ListCat(IdCat("TypeDecl")))]
+  )
+, Rule(
+    LabNoP(Id("ImportN"))
+  , IdCat("Import")
+  , [ Terminal("\"import\"")
+    , NTerminal(ListCat(IdCat("Ident")))
+    , NTerminal(ListCat(IdCat("Semi")))
+    ]
+  )
+, Rule(
+    LabNoP(Id("ImportA"))
+  , IdCat("Import")
+  , [ Terminal("\"import\"")
+    , NTerminal(ListCat(IdCat("Ident")))
+    , Terminal("\".*\"")
+    , NTerminal(ListCat(IdCat("Semi")))
+    ]
+  )
+, Separator(MEmpty(), IdCat("Import"), "\"\"")
+, Rule(
+    LabNoP(Id("TypeDecl"))
+  , IdCat("TypeDecl")
+  , [ NTerminal(IdCat("ClassHeader"))
+    , Terminal("\"{\"")
+    , NTerminal(ListCat(IdCat("FieldDeclaration")))
+    , Terminal("\"}\"")
+    ]
+  )
+, Separator(MEmpty(), IdCat("TypeDecl"), "\"\"")
+, Rule(
+    LabNoP(Id("ClassDec"))
+  , IdCat("ClassHeader")
+  , [NTerminal(ListCat(IdCat("Modifier"))), Terminal("\"class\""), NTerminal(IdCat("Ident"))]
+  )
+, Rule(
+    LabNoP(Id("ClassDecE"))
+  , IdCat("ClassHeader")
+  , [ NTerminal(ListCat(IdCat("Modifier")))
+    , Terminal("\"class\"")
+    , NTerminal(IdCat("Ident"))
+    , Terminal("\"extends\"")
+    , NTerminal(ListCat(IdCat("TypeName")))
+    ]
+  )
+, Rule(
+    LabNoP(Id("ClassDecI"))
+  , IdCat("ClassHeader")
+  , [ NTerminal(ListCat(IdCat("Modifier")))
+    , Terminal("\"class\"")
+    , NTerminal(IdCat("Ident"))
+    , Terminal("\"implements\"")
+    , NTerminal(ListCat(IdCat("TypeName")))
+    ]
+  )
+, Rule(
+    LabNoP(Id("ClassDecEI"))
+  , IdCat("ClassHeader")
+  , [ NTerminal(ListCat(IdCat("Modifier")))
+    , Terminal("\"class\"")
+    , NTerminal(IdCat("Ident"))
+    , Terminal("\"extends\"")
+    , NTerminal(ListCat(IdCat("TypeName")))
+    , Terminal("\"implements\"")
+    , NTerminal(ListCat(IdCat("TypeName")))
+    ]
+  )
+, Rule(
+    LabNoP(Id("InterDec"))
+  , IdCat("ClassHeader")
+  , [NTerminal(ListCat(IdCat("Modifier"))), Terminal("\"interface\""), NTerminal(IdCat("Ident"))]
+  )
+, Rule(
+    LabNoP(Id("InterDecE"))
+  , IdCat("ClassHeader")
+  , [ NTerminal(ListCat(IdCat("Modifier")))
+    , Terminal("\"interface\"")
+    , NTerminal(IdCat("Ident"))
+    , Terminal("\"extends\"")
+    , NTerminal(ListCat(IdCat("TypeName")))
+    ]
+  )
+, Rule(
+    LabNoP(Id("InterDecI"))
+  , IdCat("ClassHeader")
+  , [ NTerminal(ListCat(IdCat("Modifier")))
+    , Terminal("\"interface\"")
+    , NTerminal(IdCat("Ident"))
+    , Terminal("\"implements\"")
+    , NTerminal(ListCat(IdCat("TypeName")))
+    ]
+  )
+, Rule(
+    LabNoP(Id("InterDecEI"))
+  , IdCat("ClassHeader")
+  , [ NTerminal(ListCat(IdCat("Modifier")))
+    , Terminal("\"interface\"")
+    , NTerminal(IdCat("Ident"))
+    , Terminal("\"extends\"")
+    , NTerminal(ListCat(IdCat("TypeName")))
+    , Terminal("\"implements\"")
+    , NTerminal(ListCat(IdCat("TypeName")))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Dvar"))
+  , IdCat("FieldDeclaration")
+  , [ NTerminal(ListCat(IdCat("Modifier")))
+    , NTerminal(IdCat("TypeSpec"))
+    , NTerminal(ListCat(IdCat("VarDecl")))
+    , Terminal("\";\"")
+    ]
+  )
+, Rule(
+    LabNoP(Id("Dmth"))
+  , IdCat("FieldDeclaration")
+  , [ NTerminal(ListCat(IdCat("Modifier")))
+    , NTerminal(IdCat("TypeSpec"))
+    , NTerminal(IdCat("MethodDecl"))
+    , NTerminal(IdCat("MethodBody"))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Dmthth"))
+  , IdCat("FieldDeclaration")
+  , [ NTerminal(ListCat(IdCat("Modifier")))
+    , NTerminal(IdCat("TypeSpec"))
+    , NTerminal(IdCat("MethodDecl"))
+    , Terminal("\"throws\"")
+    , NTerminal(ListCat(IdCat("TypeName")))
+    , NTerminal(IdCat("MethodBody"))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Dconst"))
+  , IdCat("FieldDeclaration")
+  , [ NTerminal(ListCat(IdCat("Modifier")))
+    , NTerminal(IdCat("Ident"))
+    , Terminal("\"(\"")
+    , NTerminal(ListCat(IdCat("Parameter")))
+    , Terminal("\")\"")
+    , NTerminal(IdCat("Body"))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Dconstt"))
+  , IdCat("FieldDeclaration")
+  , [ NTerminal(ListCat(IdCat("Modifier")))
+    , NTerminal(IdCat("Ident"))
+    , Terminal("\"(\"")
+    , NTerminal(ListCat(IdCat("Parameter")))
+    , Terminal("\")\"")
+    , Terminal("\"throws\"")
+    , NTerminal(ListCat(IdCat("TypeName")))
+    , NTerminal(IdCat("Body"))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Dblk"))
+  , IdCat("FieldDeclaration")
+  , [NTerminal(IdCat("Body"))]
+  )
+, Rule(
+    LabNoP(Id("Dinnerclass"))
+  , IdCat("FieldDeclaration")
+  , [NTerminal(IdCat("TypeDecl"))]
+  )
+, Terminator(MEmpty(), IdCat("FieldDeclaration"), "\"\"")
+, Rule(
+    LabNoP(Id("IBody"))
+  , IdCat("MethodBody")
+  , [Terminal("\";\"")]
+  )
+, Rule(
+    LabNoP(Id("MBody"))
+  , IdCat("MethodBody")
+  , [NTerminal(IdCat("Body"))]
+  )
+, Rule(
+    LabNoP(Id("LVar"))
+  , IdCat("LVarStatement")
+  , [NTerminal(IdCat("TypeSpec")), NTerminal(ListCat(IdCat("VarDecl"))), Terminal("\";\"")]
+  )
+, Rule(
+    LabNoP(Id("LVarf"))
+  , IdCat("LVarStatement")
+  , [ Terminal("\"final\"")
+    , NTerminal(IdCat("TypeSpec"))
+    , NTerminal(ListCat(IdCat("VarDecl")))
+    , Terminal("\";\"")
+    ]
+  )
+, Rule(
+    LabNoP(Id("Statem"))
+  , IdCat("LVarStatement")
+  , [NTerminal(IdCat("Stm"))]
+  )
+, Separator(MEmpty(), IdCat("LVarStatement"), "\"\"")
+, Rule(
+    LabNoP(Id("Body"))
+  , IdCat("Body")
+  , [Terminal("\"{\""), NTerminal(ListCat(IdCat("LVarStatement"))), Terminal("\"}\"")]
+  )
+, Rule(
+    LabNoP(Id("Sem"))
+  , IdCat("Stm")
+  , [Terminal("\";\"")]
+  )
+, Rule(
+    LabNoP(Id("Lbl"))
+  , IdCat("Stm")
+  , [NTerminal(IdCat("Ident")), Terminal("\":\"")]
+  )
+, Rule(
+    LabNoP(Id("Case"))
+  , IdCat("Stm")
+  , [Terminal("\"case\""), NTerminal(IdCat("Exp")), Terminal("\":\"")]
+  )
+, Rule(
+    LabNoP(Id("Dflt"))
+  , IdCat("Stm")
+  , [Terminal("\"default\""), Terminal("\":\"")]
+  )
+, Rule(
+    LabNoP(Id("Exps"))
+  , IdCat("Stm")
+  , [NTerminal(IdCat("Exp")), Terminal("\";\"")]
+  )
+, Rule(
+    LabNoP(Id("LV"))
+  , IdCat("Stm")
+  , [Terminal("\"{\""), NTerminal(ListCat(IdCat("LVarStatement"))), Terminal("\"}\"")]
+  )
+, Rule(
+    LabNoP(Id("Jmp"))
+  , IdCat("Stm")
+  , [NTerminal(IdCat("JumpStm"))]
+  )
+, Rule(
+    LabNoP(Id("Grd"))
+  , IdCat("Stm")
+  , [NTerminal(IdCat("GuardStm"))]
+  )
+, Rule(
+    LabNoP(Id("Iter"))
+  , IdCat("Stm")
+  , [NTerminal(IdCat("IterStm"))]
+  )
+, Rule(
+    LabNoP(Id("Sel"))
+  , IdCat("Stm")
+  , [NTerminal(IdCat("SelectionStm"))]
+  )
+, Rule(
+    LabNoP(Id("DeclName"))
+  , IdCat("DeclaratorName")
+  , [NTerminal(IdCat("Ident"))]
+  )
+, Rule(
+    LabNoP(Id("DeclArray"))
+  , IdCat("DeclaratorName")
+  , [NTerminal(IdCat("Ident")), NTerminal(ListCat(IdCat("BracketsOpt")))]
+  )
+, Rule(
+    LabNoP(Id("VDeclAssign"))
+  , IdCat("VarDecl")
+  , [NTerminal(IdCat("DeclaratorName")), Terminal("\"=\""), NTerminal(IdCat("VariableInits"))]
+  )
+, Rule(
+    LabNoP(Id("VDecl"))
+  , IdCat("VarDecl")
+  , [NTerminal(IdCat("Ident"))]
+  )
+, Separator(MNonempty(), IdCat("VarDecl"), "\",\"")
+, Rule(
+    LabNoP(Id("IExp"))
+  , IdCat("VariableInits")
+  , [NTerminal(IdCat("Exp"))]
+  )
+, Rule(
+    LabNoP(Id("IEmpt"))
+  , IdCat("VariableInits")
+  , [Terminal("\"{\""), Terminal("\"}\"")]
+  )
+, Rule(
+    LabNoP(Id("IArri"))
+  , IdCat("VariableInits")
+  , [Terminal("\"{\""), NTerminal(IdCat("ArrayInits")), Terminal("\"}\"")]
+  )
+, Rule(
+    LabNoP(Id("Vainit"))
+  , IdCat("ArrayInits")
+  , [NTerminal(IdCat("VariableInits"))]
+  )
+, Rule(
+    LabNoP(Id("Vai"))
+  , IdCat("ArrayInits")
+  , [NTerminal(IdCat("ArrayInits")), Terminal("\",\""), NTerminal(IdCat("VariableInits"))]
+  )
+, Rule(
+    LabNoP(Id("Vais"))
+  , IdCat("ArrayInits")
+  , [NTerminal(IdCat("ArrayInits")), Terminal("\",\"")]
+  )
+, Rule(
+    LabNoP(Id("Mth"))
+  , IdCat("MethodDecl")
+  , [ NTerminal(IdCat("DeclaratorName"))
+    , Terminal("\"(\"")
+    , NTerminal(ListCat(IdCat("Parameter")))
+    , Terminal("\")\"")
+    ]
+  )
+, Rule(
+    LabNoP(Id("MthdArr"))
+  , IdCat("MethodDecl")
+  , [NTerminal(IdCat("MethodDecl")), NTerminal(IdCat("BracketsOpt"))]
+  )
+, Rule(
+    LabNoP(Id("Param"))
+  , IdCat("Parameter")
+  , [NTerminal(IdCat("TypeSpec")), NTerminal(IdCat("DeclaratorName"))]
+  )
+, Rule(
+    LabNoP(Id("Pfinal"))
+  , IdCat("Parameter")
+  , [Terminal("\"final\""), NTerminal(IdCat("TypeSpec")), NTerminal(IdCat("DeclaratorName"))]
+  )
+, Separator(MEmpty(), IdCat("Parameter"), "\",\"")
+, Rule(
+    LabNoP(Id("Ifone"))
+  , IdCat("SelectionStm")
+  , [ Terminal("\"if\"")
+    , Terminal("\"(\"")
+    , NTerminal(IdCat("Exp"))
+    , Terminal("\")\"")
+    , NTerminal(IdCat("Stm"))
+    , NTerminal(ListCat(IdCat("Elseif")))
+    ]
+  )
+, Rule(
+    LabNoP(Id("If"))
+  , IdCat("SelectionStm")
+  , [ Terminal("\"if\"")
+    , Terminal("\"(\"")
+    , NTerminal(IdCat("Exp"))
+    , Terminal("\")\"")
+    , NTerminal(IdCat("Stm"))
+    , NTerminal(ListCat(IdCat("Elseif")))
+    , Terminal("\"else\"")
+    , NTerminal(IdCat("Stm"))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Switch"))
+  , IdCat("SelectionStm")
+  , [ Terminal("\"switch\"")
+    , Terminal("\"(\"")
+    , NTerminal(IdCat("Exp"))
+    , Terminal("\")\"")
+    , NTerminal(IdCat("Body"))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Elseif"))
+  , IdCat("Elseif")
+  , [ Terminal("\"else if\"")
+    , Terminal("\"(\"")
+    , NTerminal(IdCat("Exp"))
+    , Terminal("\")\"")
+    , NTerminal(IdCat("Stm"))
+    ]
+  )
+, Terminator(MEmpty(), IdCat("Elseif"), "\"\"")
+, Rule(
+    LabNoP(Id("Break"))
+  , IdCat("JumpStm")
+  , [Terminal("\"break\""), Terminal("\";\"")]
+  )
+, Rule(
+    LabNoP(Id("Brlabel"))
+  , IdCat("JumpStm")
+  , [Terminal("\"break\""), NTerminal(IdCat("Ident")), Terminal("\";\"")]
+  )
+, Rule(
+    LabNoP(Id("Continue"))
+  , IdCat("JumpStm")
+  , [Terminal("\"continue\""), Terminal("\";\"")]
+  )
+, Rule(
+    LabNoP(Id("Continuelabel"))
+  , IdCat("JumpStm")
+  , [Terminal("\"continue\""), NTerminal(IdCat("Ident")), Terminal("\";\"")]
+  )
+, Rule(
+    LabNoP(Id("Return"))
+  , IdCat("JumpStm")
+  , [Terminal("\"return\""), Terminal("\";\"")]
+  )
+, Rule(
+    LabNoP(Id("ReturnExp"))
+  , IdCat("JumpStm")
+  , [Terminal("\"return\""), NTerminal(IdCat("Exp")), Terminal("\";\"")]
+  )
+, Rule(
+    LabNoP(Id("Throw"))
+  , IdCat("JumpStm")
+  , [Terminal("\"throw\""), NTerminal(IdCat("Exp")), Terminal("\";\"")]
+  )
+, Rule(
+    LabNoP(Id("Synchronized"))
+  , IdCat("GuardStm")
+  , [ Terminal("\"synchronized\"")
+    , Terminal("\"(\"")
+    , NTerminal(IdCat("Exp"))
+    , Terminal("\")\"")
+    , NTerminal(IdCat("Body"))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Try"))
+  , IdCat("GuardStm")
+  , [Terminal("\"try\""), NTerminal(IdCat("Body")), NTerminal(ListCat(IdCat("Catch")))]
+  )
+, Rule(
+    LabNoP(Id("Tryfinally"))
+  , IdCat("GuardStm")
+  , [ Terminal("\"try\"")
+    , NTerminal(IdCat("Body"))
+    , NTerminal(ListCat(IdCat("Catch")))
+    , Terminal("\"finally\"")
+    , NTerminal(IdCat("Body"))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Catch1"))
+  , IdCat("Catch")
+  , [ Terminal("\"catch\"")
+    , Terminal("\"(\"")
+    , NTerminal(IdCat("TypeSpec"))
+    , NTerminal(IdCat("Ident"))
+    , Terminal("\")\"")
+    , NTerminal(IdCat("Body"))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Catch2"))
+  , IdCat("Catch")
+  , [ Terminal("\"catch\"")
+    , Terminal("\"(\"")
+    , NTerminal(IdCat("TypeSpec"))
+    , Terminal("\")\"")
+    , NTerminal(IdCat("Body"))
+    ]
+  )
+, Separator(MEmpty(), IdCat("Catch"), "\"\"")
+, Rule(
+    LabNoP(Id("While"))
+  , IdCat("IterStm")
+  , [ Terminal("\"while\"")
+    , Terminal("\"(\"")
+    , NTerminal(IdCat("Exp"))
+    , Terminal("\")\"")
+    , NTerminal(IdCat("Stm"))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Do"))
+  , IdCat("IterStm")
+  , [ Terminal("\"do\"")
+    , NTerminal(IdCat("Stm"))
+    , Terminal("\"while\"")
+    , Terminal("\"(\"")
+    , NTerminal(IdCat("Exp"))
+    , Terminal("\")\"")
+    ]
+  )
+, Rule(
+    LabNoP(Id("For"))
+  , IdCat("IterStm")
+  , [ Terminal("\"for\"")
+    , Terminal("\"(\"")
+    , NTerminal(IdCat("ForInit"))
+    , NTerminal(ListCat(IdCat("Exp")))
+    , Terminal("\";\"")
+    , NTerminal(ListCat(IdCat("Exp")))
+    , Terminal("\")\"")
+    , NTerminal(IdCat("Stm"))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Exprs1"))
+  , IdCat("ForInit")
+  , [NTerminal(ListCat(IdCat("Exp"))), Terminal("\";\"")]
+  )
+, Rule(
+    LabNoP(Id("DVar"))
+  , IdCat("ForInit")
+  , [NTerminal(IdCat("TypeSpec")), NTerminal(ListCat(IdCat("VarDecl"))), Terminal("\";\"")]
+  )
+, Rule(
+    LabNoP(Id("DVarf"))
+  , IdCat("ForInit")
+  , [ Terminal("\"final\"")
+    , NTerminal(IdCat("TypeSpec"))
+    , NTerminal(ListCat(IdCat("VarDecl")))
+    , Terminal("\";\"")
+    ]
+  )
+, Rule(
+    LabNoP(Id("Mabstract"))
+  , IdCat("Modifier")
+  , [Terminal("\"abstract\"")]
+  )
+, Rule(
+    LabNoP(Id("Mfinal"))
+  , IdCat("Modifier")
+  , [Terminal("\"final\"")]
+  )
+, Rule(
+    LabNoP(Id("Mpublic"))
+  , IdCat("Modifier")
+  , [Terminal("\"public\"")]
+  )
+, Rule(
+    LabNoP(Id("Mprotected"))
+  , IdCat("Modifier")
+  , [Terminal("\"protected\"")]
+  )
+, Rule(
+    LabNoP(Id("Mprivate"))
+  , IdCat("Modifier")
+  , [Terminal("\"private\"")]
+  )
+, Rule(
+    LabNoP(Id("Mtransient"))
+  , IdCat("Modifier")
+  , [Terminal("\"transient\"")]
+  )
+, Rule(
+    LabNoP(Id("Mvolatile"))
+  , IdCat("Modifier")
+  , [Terminal("\"volatile\"")]
+  )
+, Rule(
+    LabNoP(Id("Mnative"))
+  , IdCat("Modifier")
+  , [Terminal("\"native\"")]
+  )
+, Rule(
+    LabNoP(Id("Msync"))
+  , IdCat("Modifier")
+  , [Terminal("\"synchronized\"")]
+  )
+, Rule(
+    LabNoP(Id("Mstatic"))
+  , IdCat("Modifier")
+  , [Terminal("\"static\"")]
+  )
+, Terminator(MEmpty(), IdCat("Modifier"), "\"\"")
+, Rule(
+    LabNoP(Id("Tchar"))
+  , IdCat("BasicType")
+  , [Terminal("\"char\"")]
+  )
+, Rule(
+    LabNoP(Id("Tshort"))
+  , IdCat("BasicType")
+  , [Terminal("\"short\"")]
+  )
+, Rule(
+    LabNoP(Id("Tint"))
+  , IdCat("BasicType")
+  , [Terminal("\"int\"")]
+  )
+, Rule(
+    LabNoP(Id("Tlong"))
+  , IdCat("BasicType")
+  , [Terminal("\"long\"")]
+  )
+, Rule(
+    LabNoP(Id("Tfloat"))
+  , IdCat("BasicType")
+  , [Terminal("\"float\"")]
+  )
+, Rule(
+    LabNoP(Id("Tdouble"))
+  , IdCat("BasicType")
+  , [Terminal("\"double\"")]
+  )
+, Rule(
+    LabNoP(Id("Tbyte"))
+  , IdCat("BasicType")
+  , [Terminal("\"byte\"")]
+  )
+, Rule(
+    LabNoP(Id("Tboolean"))
+  , IdCat("BasicType")
+  , [Terminal("\"boolean\"")]
+  )
+, Rule(
+    LabNoP(Id("ArrayType"))
+  , IdCat("TypeSpec")
+  , [NTerminal(IdCat("TypeName")), NTerminal(ListCat(IdCat("BracketsOpt")))]
+  )
+, Rule(
+    LabNoP(Id("TypeName"))
+  , IdCat("TypeSpec")
+  , [NTerminal(IdCat("TypeName"))]
+  )
+, Rule(
+    LabNoP(Id("BuiltIn"))
+  , IdCat("TypeName")
+  , [NTerminal(IdCat("BasicType"))]
+  )
+, Rule(
+    LabNoP(Id("ClassType"))
+  , IdCat("TypeName")
+  , [NTerminal(ListCat(IdCat("Ident")))]
+  )
+, Separator(MNonempty(), IdCat("TypeName"), "\",\"")
+, Rule(
+    LabNoP(Id("BracketsOpt"))
+  , IdCat("BracketsOpt")
+  , [Terminal("\"[]\"")]
+  )
+, Separator(MNonempty(), IdCat("BracketsOpt"), "\"\"")
+, Separator(MNonempty(), IdCat("Ident"), "\".\"")
+, Rule(
+    LabNoP(Id("Eassign"))
+  , IdCat("Exp")
+  , [NTerminal(IdCat("Exp14")), NTerminal(IdCat("Assignment_op")), NTerminal(IdCat("Exp"))]
+  )
+, Rule(
+    LabNoP(Id("Etype"))
+  , IdCat("Exp")
+  , [NTerminal(IdCat("Exp14")), Terminal("\"instanceof\""), NTerminal(IdCat("TypeName"))]
+  )
+, Rule(
+    LabNoP(Id("Econdition"))
+  , IdCat("Exp2")
+  , [ NTerminal(IdCat("Exp3"))
+    , Terminal("\"?\"")
+    , NTerminal(IdCat("Exp"))
+    , Terminal("\":\"")
+    , NTerminal(IdCat("Exp2"))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Elor"))
+  , IdCat("Exp3")
+  , [NTerminal(IdCat("Exp3")), Terminal("\"||\""), NTerminal(IdCat("Exp4"))]
+  )
+, Rule(
+    LabNoP(Id("Eland"))
+  , IdCat("Exp4")
+  , [NTerminal(IdCat("Exp4")), Terminal("\"&&\""), NTerminal(IdCat("Exp5"))]
+  )
+, Rule(
+    LabNoP(Id("Ebitor"))
+  , IdCat("Exp5")
+  , [NTerminal(IdCat("Exp5")), Terminal("\"|\""), NTerminal(IdCat("Exp6"))]
+  )
+, Rule(
+    LabNoP(Id("Ebitexor"))
+  , IdCat("Exp6")
+  , [NTerminal(IdCat("Exp6")), Terminal("\"^\""), NTerminal(IdCat("Exp7"))]
+  )
+, Rule(
+    LabNoP(Id("Ebitand"))
+  , IdCat("Exp7")
+  , [NTerminal(IdCat("Exp7")), Terminal("\"&\""), NTerminal(IdCat("Exp8"))]
+  )
+, Rule(
+    LabNoP(Id("Eeq"))
+  , IdCat("Exp8")
+  , [NTerminal(IdCat("Exp8")), Terminal("\"==\""), NTerminal(IdCat("Exp9"))]
+  )
+, Rule(
+    LabNoP(Id("Eneq"))
+  , IdCat("Exp8")
+  , [NTerminal(IdCat("Exp8")), Terminal("\"!=\""), NTerminal(IdCat("Exp9"))]
+  )
+, Rule(
+    LabNoP(Id("Elthen"))
+  , IdCat("Exp9")
+  , [NTerminal(IdCat("Exp9")), Terminal("\"<\""), NTerminal(IdCat("Exp10"))]
+  )
+, Rule(
+    LabNoP(Id("Egrthen"))
+  , IdCat("Exp9")
+  , [NTerminal(IdCat("Exp9")), Terminal("\">\""), NTerminal(IdCat("Exp10"))]
+  )
+, Rule(
+    LabNoP(Id("Ele"))
+  , IdCat("Exp9")
+  , [NTerminal(IdCat("Exp9")), Terminal("\"<=\""), NTerminal(IdCat("Exp10"))]
+  )
+, Rule(
+    LabNoP(Id("Ege"))
+  , IdCat("Exp9")
+  , [NTerminal(IdCat("Exp9")), Terminal("\">=\""), NTerminal(IdCat("Exp10"))]
+  )
+, Rule(
+    LabNoP(Id("Eleft"))
+  , IdCat("Exp10")
+  , [NTerminal(IdCat("Exp10")), Terminal("\"<<\""), NTerminal(IdCat("Exp11"))]
+  )
+, Rule(
+    LabNoP(Id("Eright"))
+  , IdCat("Exp10")
+  , [NTerminal(IdCat("Exp10")), Terminal("\">>\""), NTerminal(IdCat("Exp11"))]
+  )
+, Rule(
+    LabNoP(Id("Etrip"))
+  , IdCat("Exp10")
+  , [NTerminal(IdCat("Exp10")), Terminal("\">>>\""), NTerminal(IdCat("Exp11"))]
+  )
+, Rule(
+    LabNoP(Id("Eplus"))
+  , IdCat("Exp11")
+  , [NTerminal(IdCat("Exp11")), Terminal("\"+\""), NTerminal(IdCat("Exp12"))]
+  )
+, Rule(
+    LabNoP(Id("Eminus"))
+  , IdCat("Exp11")
+  , [NTerminal(IdCat("Exp11")), Terminal("\"-\""), NTerminal(IdCat("Exp12"))]
+  )
+, Rule(
+    LabNoP(Id("Etimes"))
+  , IdCat("Exp12")
+  , [NTerminal(IdCat("Exp12")), Terminal("\"*\""), NTerminal(IdCat("Exp13"))]
+  )
+, Rule(
+    LabNoP(Id("Ediv"))
+  , IdCat("Exp12")
+  , [NTerminal(IdCat("Exp12")), Terminal("\"/\""), NTerminal(IdCat("Exp13"))]
+  )
+, Rule(
+    LabNoP(Id("Emod"))
+  , IdCat("Exp12")
+  , [NTerminal(IdCat("Exp12")), Terminal("\"%\""), NTerminal(IdCat("Exp13"))]
+  )
+, Rule(
+    LabNoP(Id("Ebcoercion"))
+  , IdCat("Exp13")
+  , [ Terminal("\"(\"")
+    , NTerminal(IdCat("BasicType"))
+    , Terminal("\")\"")
+    , NTerminal(IdCat("Exp13"))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Eexpcoercion"))
+  , IdCat("Exp13")
+  , [ Terminal("\"(\"")
+    , NTerminal(IdCat("Exp"))
+    , Terminal("\")\"")
+    , NTerminal(IdCat("Exp15"))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Earrcoercion"))
+  , IdCat("Exp13")
+  , [ Terminal("\"(\"")
+    , NTerminal(ListCat(IdCat("Ident")))
+    , NTerminal(ListCat(IdCat("BracketsOpt")))
+    , Terminal("\")\"")
+    , NTerminal(IdCat("Exp13"))
+    ]
+  )
+, Rule(
+    LabNoP(Id("Epreop"))
+  , IdCat("Exp14")
+  , [NTerminal(IdCat("Unary_operator")), NTerminal(IdCat("Exp13"))]
+  )
+, Rule(
+    LabNoP(Id("Epreinc"))
+  , IdCat("Exp14")
+  , [Terminal("\"++\""), NTerminal(IdCat("Exp14"))]
+  )
+, Rule(
+    LabNoP(Id("Epredec"))
+  , IdCat("Exp14")
+  , [Terminal("\"--\""), NTerminal(IdCat("Exp14"))]
+  )
+, Rule(
+    LabNoP(Id("Epostinc"))
+  , IdCat("Exp15")
+  , [NTerminal(IdCat("Exp15")), Terminal("\"++\"")]
+  )
+, Rule(
+    LabNoP(Id("Epostdec"))
+  , IdCat("Exp15")
+  , [NTerminal(IdCat("Exp15")), Terminal("\"--\"")]
+  )
+, Rule(
+    LabNoP(Id("Especname"))
+  , IdCat("Exp16")
+  , [NTerminal(IdCat("SpecName"))]
+  )
+, Rule(
+    LabNoP(Id("Earr"))
+  , IdCat("Exp16")
+  , [NTerminal(IdCat("ArrAcc"))]
+  )
+, Rule(
+    LabNoP(Id("Emth"))
+  , IdCat("Exp16")
+  , [NTerminal(IdCat("MthCall"))]
+  )
+, Rule(
+    LabNoP(Id("Efld"))
+  , IdCat("Exp16")
+  , [NTerminal(IdCat("FieldAcc"))]
+  )
+, Rule(
+    LabNoP(Id("Econst"))
+  , IdCat("Exp16")
+  , [NTerminal(IdCat("Constant"))]
+  )
+, Rule(
+    LabNoP(Id("Estring"))
+  , IdCat("Exp16")
+  , [NTerminal(IdCat("String"))]
+  )
+, Rule(
+    LabNoP(Id("Enewalloc"))
+  , IdCat("Exp17")
+  , [NTerminal(IdCat("NewAlloc"))]
+  )
+, Rule(
+    LabNoP(Id("Evar"))
+  , IdCat("Exp18")
+  , [NTerminal(ListCat(IdCat("Ident")))]
+  )
+, Rule(
+    LabNoP(Id("SSsuper"))
+  , IdCat("SpecName")
+  , [Terminal("\"super\"")]
+  )
+, Rule(
+    LabNoP(Id("SSthis"))
+  , IdCat("SpecName")
+  , [Terminal("\"this\"")]
+  )
+, Rule(
+    LabNoP(Id("SSnull"))
+  , IdCat("SpecName")
+  , [Terminal("\"null\"")]
+  )
+, Rule(
+    LabNoP(Id("Anewclass"))
+  , IdCat("NewAlloc")
+  , [Terminal("\"new\""), NTerminal(IdCat("TypeName")), NTerminal(IdCat("Args"))]
+  )
+, Rule(
+    LabNoP(Id("Anewinnerclass"))
+  , IdCat("NewAlloc")
+  , [ Terminal("\"new\"")
+    , NTerminal(IdCat("TypeName"))
+    , NTerminal(IdCat("Args"))
+    , Terminal("\"{\"")
+    , NTerminal(ListCat(IdCat("FieldDeclaration")))
+    , Terminal("\"}\"")
+    ]
+  )
+, Rule(
+    LabNoP(Id("Anewarray"))
+  , IdCat("NewAlloc")
+  , [Terminal("\"new\""), NTerminal(IdCat("TypeName")), NTerminal(ListCat(IdCat("DimExpr")))]
+  )
+, Rule(
+    LabNoP(Id("Anewarriempty"))
+  , IdCat("NewAlloc")
+  , [ Terminal("\"new\"")
+    , NTerminal(IdCat("TypeName"))
+    , NTerminal(ListCat(IdCat("DimExpr")))
+    , Terminal("\"{\"")
+    , Terminal("\"}\"")
+    ]
+  )
+, Rule(
+    LabNoP(Id("Anewarrinits"))
+  , IdCat("NewAlloc")
+  , [ Terminal("\"new\"")
+    , NTerminal(IdCat("TypeName"))
+    , NTerminal(ListCat(IdCat("DimExpr")))
+    , Terminal("\"{\"")
+    , NTerminal(IdCat("ArrayInits"))
+    , Terminal("\"}\"")
+    ]
+  )
+, Rule(
+    LabNoP(Id("Aarr"))
+  , IdCat("ArrAcc")
+  , [ NTerminal(ListCat(IdCat("Ident")))
+    , Terminal("\"[\"")
+    , NTerminal(IdCat("Exp"))
+    , Terminal("\"]\"")
+    ]
+  )
+, Rule(
+    LabNoP(Id("Aarr1"))
+  , IdCat("ArrAcc")
+  , [ NTerminal(IdCat("SpecExp"))
+    , Terminal("\"[\"")
+    , NTerminal(IdCat("Exp"))
+    , Terminal("\"]\"")
+    ]
+  )
+, Rule(
+    LabNoP(Id("Cep"))
+  , IdCat("SpecExp")
+  , [Terminal("\"(\""), NTerminal(IdCat("Exp")), Terminal("\")\"")]
+  )
+, Rule(
+    LabNoP(Id("Cnp"))
+  , IdCat("SpecExp")
+  , [NTerminal(IdCat("SpecExpNP"))]
+  )
+, Rule(
+    LabNoP(Id("Cthis"))
+  , IdCat("SpecExp")
+  , [NTerminal(IdCat("SpecName"))]
+  )
+, Rule(
+    LabNoP(Id("CNLit"))
+  , IdCat("SpecExpNP")
+  , [NTerminal(IdCat("Constant"))]
+  )
+, Rule(
+    LabNoP(Id("CNParr"))
+  , IdCat("SpecExpNP")
+  , [NTerminal(IdCat("ArrAcc"))]
+  )
+, Rule(
+    LabNoP(Id("CNPmth"))
+  , IdCat("SpecExpNP")
+  , [NTerminal(IdCat("MthCall"))]
+  )
+, Rule(
+    LabNoP(Id("CNPfld"))
+  , IdCat("SpecExpNP")
+  , [NTerminal(IdCat("FieldAcc"))]
+  )
+, Rule(
+    LabNoP(Id("Mmth"))
+  , IdCat("MthCall")
+  , [NTerminal(ListCat(IdCat("Ident"))), NTerminal(IdCat("Args"))]
+  )
+, Rule(
+    LabNoP(Id("Mmth1"))
+  , IdCat("MthCall")
+  , [NTerminal(IdCat("SpecExpNP")), NTerminal(IdCat("Args"))]
+  )
+, Rule(
+    LabNoP(Id("Mmthspec"))
+  , IdCat("MthCall")
+  , [NTerminal(IdCat("SpecName")), NTerminal(IdCat("Args"))]
+  )
+, Rule(
+    LabNoP(Id("Ffvar"))
+  , IdCat("FieldAcc")
+  , [NTerminal(IdCat("SpecExp")), Terminal("\".\""), NTerminal(IdCat("Ident"))]
+  )
+, Rule(
+    LabNoP(Id("Ffvar1"))
+  , IdCat("FieldAcc")
+  , [NTerminal(IdCat("NewAlloc")), Terminal("\".\""), NTerminal(IdCat("Ident"))]
+  )
+, Rule(
+    LabNoP(Id("Ffthis"))
+  , IdCat("FieldAcc")
+  , [NTerminal(ListCat(IdCat("Ident"))), Terminal("\".this\"")]
+  )
+, Rule(
+    LabNoP(Id("Fclass"))
+  , IdCat("FieldAcc")
+  , [NTerminal(ListCat(IdCat("Ident"))), Terminal("\".class\"")]
+  )
+, Rule(
+    LabNoP(Id("Ffclass2"))
+  , IdCat("FieldAcc")
+  , [NTerminal(IdCat("BasicType")), Terminal("\".class\"")]
+  )
+, Rule(
+    LabNoP(Id("Args"))
+  , IdCat("Args")
+  , [Terminal("\"(\""), NTerminal(ListCat(IdCat("Exp"))), Terminal("\")\"")]
+  )
+, Rule(
+    LabNoP(Id("DimExpr"))
+  , IdCat("DimExpr")
+  , [Terminal("\"[\""), NTerminal(IdCat("Exp")), Terminal("\"]\"")]
+  )
+, Terminator(MNonempty(), IdCat("DimExpr"), "\"\"")
+, Separator(MEmpty(), IdCat("Exp"), "\",\"")
+, Coercions("Exp", "18")
+, Token(
+    "Unsigned"
+  , RSeq(
+      RSeq(RAlts("\"123456789\""), RStar(RDigit()))
+    , RAlt(RChar("'u'"), RChar("'U'"))
+    )
+  )
+, Token(
+    "Long"
+  , RSeq(
+      RSeq(RAlts("\"123456789\""), RStar(RDigit()))
+    , RAlt(RChar("'l'"), RChar("'L'"))
+    )
+  )
+, Token(
+    "UnsignedLong"
+  , RSeq(
+      RSeq(RAlts("\"123456789\""), RStar(RDigit()))
+    , RAlt(
+        RSeq(RChar("'u'"), RChar("'l'"))
+      , RSeq(RChar("'U'"), RChar("'L'"))
+      )
+    )
+  )
+, Token(
+    "Hexadecimal"
+  , RSeq(
+      RSeq(RChar("'0'"), RAlt(RChar("'x'"), RChar("'X'")))
+    , RPlus(RAlt(RAlt(RDigit(), RAlts("\"abcdef\"")), RAlts("\"ABCDEF\"")))
+    )
+  )
+, Token(
+    "HexUnsigned"
+  , RSeq(
+      RSeq(
+        RSeq(RChar("'0'"), RAlt(RChar("'x'"), RChar("'X'")))
+      , RPlus(RAlt(RAlt(RDigit(), RAlts("\"abcdef\"")), RAlts("\"ABCDEF\"")))
+      )
+    , RAlt(RChar("'u'"), RChar("'U'"))
+    )
+  )
+, Token(
+    "HexLong"
+  , RSeq(
+      RSeq(
+        RSeq(RChar("'0'"), RAlt(RChar("'x'"), RChar("'X'")))
+      , RPlus(RAlt(RAlt(RDigit(), RAlts("\"abcdef\"")), RAlts("\"ABCDEF\"")))
+      )
+    , RAlt(RChar("'l'"), RChar("'L'"))
+    )
+  )
+, Token(
+    "HexUnsLong"
+  , RSeq(
+      RSeq(
+        RSeq(RChar("'0'"), RAlt(RChar("'x'"), RChar("'X'")))
+      , RPlus(RAlt(RAlt(RDigit(), RAlts("\"abcdef\"")), RAlts("\"ABCDEF\"")))
+      )
+    , RAlt(
+        RSeq(RChar("'u'"), RChar("'l'"))
+      , RSeq(RChar("'U'"), RChar("'L'"))
+      )
+    )
+  )
+, Token("Octal", RSeq(RChar("'0'"), RStar(RAlts("\"01234567\""))))
+, Token(
+    "OctalUnsigned"
+  , RSeq(
+      RSeq(RChar("'0'"), RStar(RAlts("\"01234567\"")))
+    , RAlt(RChar("'u'"), RChar("'U'"))
+    )
+  )
+, Token(
+    "OctalLong"
+  , RSeq(
+      RSeq(RChar("'0'"), RStar(RAlts("\"01234567\"")))
+    , RAlt(RChar("'l'"), RChar("'L'"))
+    )
+  )
+, Token(
+    "OctalUnsLong"
+  , RSeq(
+      RSeq(RChar("'0'"), RStar(RAlts("\"01234567\"")))
+    , RAlt(
+        RSeq(RChar("'u'"), RChar("'l'"))
+      , RSeq(RChar("'U'"), RChar("'L'"))
+      )
+    )
+  )
+, Token(
+    "JDouble"
+  , RAlt(
+      RAlt(
+        RSeq(
+          RAlt(
+            RSeq(RPlus(RDigit()), RChar("'.'"))
+          , RSeq(RChar("'.'"), RPlus(RDigit()))
+          )
+        , ROpt(
+            RSeq(
+              RSeq(
+                RAlt(RChar("'e'"), RChar("'E'"))
+              , ROpt(RChar("'-'"))
+              )
+            , RPlus(RDigit())
+            )
+          )
+        )
+      , RSeq(
+          RSeq(
+            RSeq(RPlus(RDigit()), RAlt(RChar("'e'"), RChar("'E'")))
+          , ROpt(RChar("'-'"))
+          )
+        , RPlus(RDigit())
+        )
+      )
+    , RSeq(
+        RSeq(
+          RSeq(
+            RSeq(RSeq(RPlus(RDigit()), RChar("'.'")), RPlus(RDigit()))
+          , RChar("'E'")
+          )
+        , ROpt(RChar("'-'"))
+        )
+      , RPlus(RDigit())
+      )
+    )
+  )
+, Token(
+    "JFloat"
+  , RAlt(
+      RSeq(
+        RSeq(
+          RAlt(
+            RAlt(
+              RSeq(RSeq(RPlus(RDigit()), RChar("'.'")), RPlus(RDigit()))
+            , RSeq(RPlus(RDigit()), RChar("'.'"))
+            )
+          , RSeq(RChar("'.'"), RPlus(RDigit()))
+          )
+        , ROpt(
+            RSeq(
+              RSeq(
+                RAlt(RChar("'e'"), RChar("'E'"))
+              , ROpt(RChar("'-'"))
+              )
+            , RPlus(RDigit())
+            )
+          )
+        )
+      , RAlt(RChar("'f'"), RChar("'F'"))
+      )
+    , RSeq(
+        RSeq(
+          RSeq(
+            RSeq(RPlus(RDigit()), RAlt(RChar("'e'"), RChar("'E'")))
+          , ROpt(RChar("'-'"))
+          )
+        , RPlus(RDigit())
+        )
+      , RAlt(RChar("'f'"), RChar("'F'"))
+      )
+    )
+  )
+, Token(
+    "JLongDouble"
+  , RAlt(
+      RSeq(
+        RSeq(
+          RAlt(
+            RAlt(
+              RSeq(RSeq(RPlus(RDigit()), RChar("'.'")), RPlus(RDigit()))
+            , RSeq(RPlus(RDigit()), RChar("'.'"))
+            )
+          , RSeq(RChar("'.'"), RPlus(RDigit()))
+          )
+        , ROpt(
+            RSeq(
+              RSeq(
+                RAlt(RChar("'e'"), RChar("'E'"))
+              , ROpt(RChar("'-'"))
+              )
+            , RPlus(RDigit())
+            )
+          )
+        )
+      , RAlt(RChar("'l'"), RChar("'L'"))
+      )
+    , RSeq(
+        RSeq(
+          RSeq(
+            RSeq(RPlus(RDigit()), RAlt(RChar("'e'"), RChar("'E'")))
+          , ROpt(RChar("'-'"))
+          )
+        , RPlus(RDigit())
+        )
+      , RAlt(RChar("'l'"), RChar("'L'"))
+      )
+    )
+  )
+, Token(
+    "UnicodeChar"
+  , RSeq(
+      RSeq(
+        RSeq(
+          RSeq(
+            RSeq(
+              RSeq(RSeq(RChar("'\\''"), RChar("'\\\\'")), RChar("'u'"))
+            , RAlt(RAlt(RDigit(), RAlts("\"abcdef\"")), RAlts("\"ABCDEF\""))
+            )
+          , RAlt(RAlt(RDigit(), RAlts("\"abcdef\"")), RAlts("\"ABCDEF\""))
+          )
+        , RAlt(RAlt(RDigit(), RAlts("\"abcdef\"")), RAlts("\"ABCDEF\""))
+        )
+      , RAlt(RAlt(RDigit(), RAlts("\"abcdef\"")), RAlts("\"ABCDEF\""))
+      )
+    , RChar("'\\''")
+    )
+  )
+, Token(
+    "JChar"
+  , RSeq(
+      RSeq(
+        RChar("'\\''")
+      , RAlt(
+          RMinus(RAny(), RAlts("\"'\\\\\""))
+        , RSeq(RChar("'\\\\'"), RAlts("\"'\\\\ntr\""))
+        )
+      )
+    , RChar("'\\''")
+    )
+  )
+, Rule(
+    LabNoP(Id("Efloat"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("Double"))]
+  )
+, Rule(
+    LabNoP(Id("Echar"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("JChar"))]
+  )
+, Rule(
+    LabNoP(Id("Eunicode"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("UnicodeChar"))]
+  )
+, Rule(
+    LabNoP(Id("Eunsigned"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("Unsigned"))]
+  )
+, Rule(
+    LabNoP(Id("Elong"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("Long"))]
+  )
+, Rule(
+    LabNoP(Id("Eunsignlong"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("UnsignedLong"))]
+  )
+, Rule(
+    LabNoP(Id("Ehexadec"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("Hexadecimal"))]
+  )
+, Rule(
+    LabNoP(Id("Ehexaunsign"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("HexUnsigned"))]
+  )
+, Rule(
+    LabNoP(Id("Ehexalong"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("HexLong"))]
+  )
+, Rule(
+    LabNoP(Id("Ehexaunslong"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("HexUnsLong"))]
+  )
+, Rule(
+    LabNoP(Id("Eoctal"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("Octal"))]
+  )
+, Rule(
+    LabNoP(Id("Eoctalunsign"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("OctalUnsigned"))]
+  )
+, Rule(
+    LabNoP(Id("Eoctallong"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("OctalLong"))]
+  )
+, Rule(
+    LabNoP(Id("Eoctalunslong"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("OctalUnsLong"))]
+  )
+, Rule(
+    LabNoP(Id("Ecdouble"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("JDouble"))]
+  )
+, Rule(
+    LabNoP(Id("Ecfloat"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("JFloat"))]
+  )
+, Rule(
+    LabNoP(Id("Eclongdouble"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("JLongDouble"))]
+  )
+, Rule(
+    LabNoP(Id("Eint"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("Integer"))]
+  )
+, Rule(
+    LabNoP(Id("Etrue"))
+  , IdCat("Constant")
+  , [Terminal("\"true\"")]
+  )
+, Rule(
+    LabNoP(Id("Efalse"))
+  , IdCat("Constant")
+  , [Terminal("\"false\"")]
+  )
+, Internal(
+    LabNoP(Id("Elonger"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("Integer"))]
+  )
+, Internal(
+    LabNoP(Id("Edouble"))
+  , IdCat("Constant")
+  , [NTerminal(IdCat("Double"))]
+  )
+, Rule(
+    LabNoP(Id("Plus"))
+  , IdCat("Unary_operator")
+  , [Terminal("\"+\"")]
+  )
+, Rule(
+    LabNoP(Id("Negative"))
+  , IdCat("Unary_operator")
+  , [Terminal("\"-\"")]
+  )
+, Rule(
+    LabNoP(Id("Complement"))
+  , IdCat("Unary_operator")
+  , [Terminal("\"~\"")]
+  )
+, Rule(
+    LabNoP(Id("Logicalneg"))
+  , IdCat("Unary_operator")
+  , [Terminal("\"!\"")]
+  )
+, Rule(
+    LabNoP(Id("Assign"))
+  , IdCat("Assignment_op")
+  , [Terminal("\"=\"")]
+  )
+, Rule(
+    LabNoP(Id("AssignMul"))
+  , IdCat("Assignment_op")
+  , [Terminal("\"*=\"")]
+  )
+, Rule(
+    LabNoP(Id("AssignDiv"))
+  , IdCat("Assignment_op")
+  , [Terminal("\"/=\"")]
+  )
+, Rule(
+    LabNoP(Id("AssignMod"))
+  , IdCat("Assignment_op")
+  , [Terminal("\"%=\"")]
+  )
+, Rule(
+    LabNoP(Id("AssignAdd"))
+  , IdCat("Assignment_op")
+  , [Terminal("\"+=\"")]
+  )
+, Rule(
+    LabNoP(Id("AssignSub"))
+  , IdCat("Assignment_op")
+  , [Terminal("\"-=\"")]
+  )
+, Rule(
+    LabNoP(Id("AssignLeft"))
+  , IdCat("Assignment_op")
+  , [Terminal("\"<<=\"")]
+  )
+, Rule(
+    LabNoP(Id("AssignRight"))
+  , IdCat("Assignment_op")
+  , [Terminal("\">>=\"")]
+  )
+, Rule(
+    LabNoP(Id("AssignTrip"))
+  , IdCat("Assignment_op")
+  , [Terminal("\">>>=\"")]
+  )
+, Rule(
+    LabNoP(Id("AssignAnd"))
+  , IdCat("Assignment_op")
+  , [Terminal("\"&=\"")]
+  )
+, Rule(
+    LabNoP(Id("AssignXor"))
+  , IdCat("Assignment_op")
+  , [Terminal("\"^=\"")]
+  )
+, Rule(
+    LabNoP(Id("AssignOr"))
+  , IdCat("Assignment_op")
+  , [Terminal("\"|=\"")]
+  )
+, Rule(
+    LabNoP(Id("Sem1"))
+  , IdCat("Semi")
+  , [Terminal("\";\"")]
+  )
+, Terminator(MEmpty(), IdCat("Semi"), "\"\"")
+, Comments("\"/**\"", "\"**/\"")
+, Comments("\"/*\"", "\"*/\"")
+, Comment("\"//\"")
+]

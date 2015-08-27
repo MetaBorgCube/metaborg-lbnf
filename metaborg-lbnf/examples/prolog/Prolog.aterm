@@ -1,0 +1,129 @@
+MkGrammar(
+  [ Rule(
+      LabNoP(Id("Db"))
+    , IdCat("Database")
+    , [NTerminal(ListCat(IdCat("Clause")))]
+    )
+  , Rule(
+      LabNoP(Id("Fact"))
+    , IdCat("Clause")
+    , [NTerminal(IdCat("Predicate"))]
+    )
+  , Rule(
+      LabNoP(Id("Rule"))
+    , IdCat("Clause")
+    , [NTerminal(IdCat("Predicate")), Terminal("\":-\""), NTerminal(ListCat(IdCat("Predicate")))]
+    )
+  , Rule(
+      LabNoP(Id("Directive"))
+    , IdCat("Clause")
+    , [Terminal("\":-\""), NTerminal(ListCat(IdCat("Predicate")))]
+    )
+  , Rule(
+      LabNoP(Id("APred"))
+    , IdCat("Predicate")
+    , [NTerminal(IdCat("Atom"))]
+    )
+  , Rule(
+      LabNoP(Id("CPred"))
+    , IdCat("Predicate")
+    , [ NTerminal(IdCat("Atom"))
+      , Terminal("\"(\"")
+      , NTerminal(ListCat(IdCat("Term")))
+      , Terminal("\")\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("TAtom"))
+    , IdCat("Term")
+    , [NTerminal(IdCat("Atom"))]
+    )
+  , Rule(
+      LabNoP(Id("VarT"))
+    , IdCat("Term")
+    , [NTerminal(IdCat("Var"))]
+    )
+  , Rule(
+      LabNoP(Id("Complex"))
+    , IdCat("Term")
+    , [ NTerminal(IdCat("Atom"))
+      , Terminal("\"(\"")
+      , NTerminal(ListCat(IdCat("Term")))
+      , Terminal("\")\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("TList"))
+    , IdCat("Term")
+    , [NTerminal(IdCat("List"))]
+    )
+  , Rule(
+      LabNoP(Id("Atm"))
+    , IdCat("Atom")
+    , [NTerminal(IdCat("LIdent"))]
+    )
+  , Rule(
+      LabNoP(Id("EAtm"))
+    , IdCat("Atom")
+    , [Terminal("\"\\'\""), NTerminal(IdCat("Ident")), Terminal("\"\\'\"")]
+    )
+  , Rule(
+      LabNoP(Id("V"))
+    , IdCat("Var")
+    , [NTerminal(IdCat("UIdent"))]
+    )
+  , Rule(
+      LabNoP(Id("A"))
+    , IdCat("Var")
+    , [NTerminal(IdCat("Wild"))]
+    )
+  , Rule(
+      LabNoP(Id("Empty"))
+    , IdCat("List")
+    , [Terminal("\"[\""), Terminal("\"]\"")]
+    )
+  , Rule(
+      LabNoP(Id("Enum"))
+    , IdCat("List")
+    , [Terminal("\"[\""), NTerminal(ListCat(IdCat("Term"))), Terminal("\"]\"")]
+    )
+  , Rule(
+      LabNoP(Id("Cons"))
+    , IdCat("List")
+    , [ Terminal("\"[\"")
+      , NTerminal(ListCat(IdCat("Term")))
+      , Terminal("\"|\"")
+      , NTerminal(IdCat("List"))
+      , Terminal("\"]\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("ConsV"))
+    , IdCat("List")
+    , [ Terminal("\"[\"")
+      , NTerminal(ListCat(IdCat("Term")))
+      , Terminal("\"|\"")
+      , NTerminal(IdCat("Var"))
+      , Terminal("\"]\"")
+      ]
+    )
+  , Terminator(MEmpty(), IdCat("Clause"), "\".\"")
+  , Separator(MNonempty(), IdCat("Predicate"), "\",\"")
+  , Separator(MNonempty(), IdCat("Term"), "\",\"")
+  , Token(
+      "UIdent"
+    , RSeq(
+        RUpper()
+      , RStar(RAlt(RAlt(RLetter(), RDigit()), RChar("'_'")))
+      )
+    )
+  , Token(
+      "LIdent"
+    , RSeq(
+        RLower()
+      , RStar(RAlt(RAlt(RLetter(), RDigit()), RChar("'_'")))
+      )
+    )
+  , Token("Wild", RSeq(RChar("'_'"), RStar(RAny())))
+  ]
+)

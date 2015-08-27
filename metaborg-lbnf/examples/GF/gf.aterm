@@ -1,0 +1,1008 @@
+MkGrammar(
+  [ Entryp(["Grammar", "ModDef", "OldGrammar", "Exp"])
+  , Comment("\"--\"")
+  , Comments("\"{-\"", "\"-}\"")
+  , Rule(
+      LabNoP(Id("Gr"))
+    , IdCat("Grammar")
+    , [NTerminal(ListCat(IdCat("ModDef")))]
+    )
+  , Terminator(MEmpty(), IdCat("ModDef"), "\"\"")
+  , Rule(
+      LabNoP(Wild())
+    , IdCat("ModDef")
+    , [NTerminal(IdCat("ModDef")), Terminal("\";\"")]
+    )
+  , Rule(
+      LabNoP(Id("MMain"))
+    , IdCat("ModDef")
+    , [ Terminal("\"grammar\"")
+      , NTerminal(IdCat("Ident"))
+      , Terminal("\"=\"")
+      , Terminal("\"{\"")
+      , Terminal("\"abstract\"")
+      , Terminal("\"=\"")
+      , NTerminal(IdCat("Ident"))
+      , Terminal("\";\"")
+      , NTerminal(ListCat(IdCat("ConcSpec")))
+      , Terminal("\"}\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("ConcSpecC"))
+    , IdCat("ConcSpec")
+    , [NTerminal(IdCat("Ident")), Terminal("\"=\""), NTerminal(IdCat("ConcExp"))]
+    )
+  , Separator(MEmpty(), IdCat("ConcSpec"), "\";\"")
+  , Rule(
+      LabNoP(Id("ConcExpC"))
+    , IdCat("ConcExp")
+    , [NTerminal(IdCat("Ident")), NTerminal(ListCat(IdCat("Transfer")))]
+    )
+  , Separator(MEmpty(), IdCat("Transfer"), "\"\"")
+  , Rule(
+      LabNoP(Id("TransferIn"))
+    , IdCat("Transfer")
+    , [ Terminal("\"(\"")
+      , Terminal("\"transfer\"")
+      , Terminal("\"in\"")
+      , NTerminal(IdCat("OpenDecl"))
+      , Terminal("\")\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("TransferOut"))
+    , IdCat("Transfer")
+    , [ Terminal("\"(\"")
+      , Terminal("\"transfer\"")
+      , Terminal("\"out\"")
+      , NTerminal(IdCat("OpenDecl"))
+      , Terminal("\")\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("MModule"))
+    , IdCat("ModDef")
+    , [ NTerminal(IdCat("ComplMod"))
+      , NTerminal(IdCat("ModType"))
+      , Terminal("\"=\"")
+      , NTerminal(IdCat("ModBody"))
+      ]
+    )
+  , Rule(
+      LabNoP(Id("MTAbstract"))
+    , IdCat("ModType")
+    , [Terminal("\"abstract\""), NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("MTResource"))
+    , IdCat("ModType")
+    , [Terminal("\"resource\""), NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("MTInterface"))
+    , IdCat("ModType")
+    , [Terminal("\"interface\""), NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("MTConcrete"))
+    , IdCat("ModType")
+    , [ Terminal("\"concrete\"")
+      , NTerminal(IdCat("Ident"))
+      , Terminal("\"of\"")
+      , NTerminal(IdCat("Ident"))
+      ]
+    )
+  , Rule(
+      LabNoP(Id("MTInstance"))
+    , IdCat("ModType")
+    , [ Terminal("\"instance\"")
+      , NTerminal(IdCat("Ident"))
+      , Terminal("\"of\"")
+      , NTerminal(IdCat("Ident"))
+      ]
+    )
+  , Rule(
+      LabNoP(Id("MTTransfer"))
+    , IdCat("ModType")
+    , [ Terminal("\"transfer\"")
+      , NTerminal(IdCat("Ident"))
+      , Terminal("\":\"")
+      , NTerminal(IdCat("OpenDecl"))
+      , Terminal("\"->\"")
+      , NTerminal(IdCat("OpenDecl"))
+      ]
+    )
+  , Rule(
+      LabNoP(Id("MBody"))
+    , IdCat("ModBody")
+    , [ NTerminal(IdCat("Extend"))
+      , NTerminal(IdCat("Opens"))
+      , Terminal("\"{\"")
+      , NTerminal(ListCat(IdCat("TopDef")))
+      , Terminal("\"}\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("MWith"))
+    , IdCat("ModBody")
+    , [NTerminal(IdCat("Ident")), Terminal("\"with\""), NTerminal(ListCat(IdCat("OpenDecl")))]
+    )
+  , Rule(
+      LabNoP(Id("MWithE"))
+    , IdCat("ModBody")
+    , [ NTerminal(ListCat(IdCat("Included")))
+      , Terminal("\"**\"")
+      , NTerminal(IdCat("Ident"))
+      , Terminal("\"with\"")
+      , NTerminal(ListCat(IdCat("OpenDecl")))
+      ]
+    )
+  , Rule(
+      LabNoP(Id("MReuse"))
+    , IdCat("ModBody")
+    , [Terminal("\"reuse\""), NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("MUnion"))
+    , IdCat("ModBody")
+    , [Terminal("\"union\""), NTerminal(ListCat(IdCat("Included")))]
+    )
+  , Separator(MEmpty(), IdCat("TopDef"), "\"\"")
+  , Rule(
+      LabNoP(Id("Ext"))
+    , IdCat("Extend")
+    , [NTerminal(ListCat(IdCat("Included"))), Terminal("\"**\"")]
+    )
+  , Rule(LabNoP(Id("NoExt")), IdCat("Extend"), [])
+  , Separator(MEmpty(), IdCat("OpenDecl"), "\",\"")
+  , Rule(LabNoP(Id("NoOpens")), IdCat("Opens"), [])
+  , Rule(
+      LabNoP(Id("OpenIn"))
+    , IdCat("Opens")
+    , [Terminal("\"open\""), NTerminal(ListCat(IdCat("OpenDecl"))), Terminal("\"in\"")]
+    )
+  , Rule(
+      LabNoP(Id("OName"))
+    , IdCat("OpenDecl")
+    , [NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("OQualQO"))
+    , IdCat("OpenDecl")
+    , [ Terminal("\"(\"")
+      , NTerminal(IdCat("QualOpen"))
+      , NTerminal(IdCat("Ident"))
+      , Terminal("\")\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("OQual"))
+    , IdCat("OpenDecl")
+    , [ Terminal("\"(\"")
+      , NTerminal(IdCat("QualOpen"))
+      , NTerminal(IdCat("Ident"))
+      , Terminal("\"=\"")
+      , NTerminal(IdCat("Ident"))
+      , Terminal("\")\"")
+      ]
+    )
+  , Rule(LabNoP(Id("CMCompl")), IdCat("ComplMod"), [])
+  , Rule(
+      LabNoP(Id("CMIncompl"))
+    , IdCat("ComplMod")
+    , [Terminal("\"incomplete\"")]
+    )
+  , Rule(LabNoP(Id("QOCompl")), IdCat("QualOpen"), [])
+  , Rule(
+      LabNoP(Id("QOIncompl"))
+    , IdCat("QualOpen")
+    , [Terminal("\"incomplete\"")]
+    )
+  , Rule(
+      LabNoP(Id("QOInterface"))
+    , IdCat("QualOpen")
+    , [Terminal("\"interface\"")]
+    )
+  , Separator(MEmpty(), IdCat("Included"), "\",\"")
+  , Rule(
+      LabNoP(Id("IAll"))
+    , IdCat("Included")
+    , [NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("ISome"))
+    , IdCat("Included")
+    , [ NTerminal(IdCat("Ident"))
+      , Terminal("\"[\"")
+      , NTerminal(ListCat(IdCat("Ident")))
+      , Terminal("\"]\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("IMinus"))
+    , IdCat("Included")
+    , [ NTerminal(IdCat("Ident"))
+      , Terminal("\"-\"")
+      , Terminal("\"[\"")
+      , NTerminal(ListCat(IdCat("Ident")))
+      , Terminal("\"]\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("DDeclC"))
+    , IdCat("Def")
+    , [NTerminal(ListCat(IdCat("Name"))), Terminal("\":\""), NTerminal(IdCat("Exp"))]
+    )
+  , Rule(
+      LabNoP(Id("DDef"))
+    , IdCat("Def")
+    , [NTerminal(ListCat(IdCat("Name"))), Terminal("\"=\""), NTerminal(IdCat("Exp"))]
+    )
+  , Rule(
+      LabNoP(Id("DPatt"))
+    , IdCat("Def")
+    , [ NTerminal(IdCat("Name"))
+      , NTerminal(ListCat(IdCat("Patt")))
+      , Terminal("\"=\"")
+      , NTerminal(IdCat("Exp"))
+      ]
+    )
+  , Rule(
+      LabNoP(Id("DFull"))
+    , IdCat("Def")
+    , [ NTerminal(ListCat(IdCat("Name")))
+      , Terminal("\":\"")
+      , NTerminal(IdCat("Exp"))
+      , Terminal("\"=\"")
+      , NTerminal(IdCat("Exp"))
+      ]
+    )
+  , Rule(
+      LabNoP(Id("DefCat"))
+    , IdCat("TopDef")
+    , [Terminal("\"cat\""), NTerminal(ListCat(IdCat("CatDef")))]
+    )
+  , Rule(
+      LabNoP(Id("DefFun"))
+    , IdCat("TopDef")
+    , [Terminal("\"fun\""), NTerminal(ListCat(IdCat("FunDef")))]
+    )
+  , Rule(
+      LabNoP(Id("DefFunData"))
+    , IdCat("TopDef")
+    , [Terminal("\"data\""), NTerminal(ListCat(IdCat("FunDef")))]
+    )
+  , Rule(
+      LabNoP(Id("DefDef"))
+    , IdCat("TopDef")
+    , [Terminal("\"def\""), NTerminal(ListCat(IdCat("Def")))]
+    )
+  , Rule(
+      LabNoP(Id("DefData"))
+    , IdCat("TopDef")
+    , [Terminal("\"data\""), NTerminal(ListCat(IdCat("DataDef")))]
+    )
+  , Rule(
+      LabNoP(Id("DefTrans"))
+    , IdCat("TopDef")
+    , [Terminal("\"transfer\""), NTerminal(ListCat(IdCat("Def")))]
+    )
+  , Rule(
+      LabNoP(Id("DefPar"))
+    , IdCat("TopDef")
+    , [Terminal("\"param\""), NTerminal(ListCat(IdCat("ParDef")))]
+    )
+  , Rule(
+      LabNoP(Id("DefOper"))
+    , IdCat("TopDef")
+    , [Terminal("\"oper\""), NTerminal(ListCat(IdCat("Def")))]
+    )
+  , Rule(
+      LabNoP(Id("DefLincat"))
+    , IdCat("TopDef")
+    , [Terminal("\"lincat\""), NTerminal(ListCat(IdCat("PrintDef")))]
+    )
+  , Rule(
+      LabNoP(Id("DefLindef"))
+    , IdCat("TopDef")
+    , [Terminal("\"lindef\""), NTerminal(ListCat(IdCat("Def")))]
+    )
+  , Rule(
+      LabNoP(Id("DefLin"))
+    , IdCat("TopDef")
+    , [Terminal("\"lin\""), NTerminal(ListCat(IdCat("Def")))]
+    )
+  , Rule(
+      LabNoP(Id("DefPrintCat"))
+    , IdCat("TopDef")
+    , [Terminal("\"printname\""), Terminal("\"cat\""), NTerminal(ListCat(IdCat("PrintDef")))]
+    )
+  , Rule(
+      LabNoP(Id("DefPrintFun"))
+    , IdCat("TopDef")
+    , [Terminal("\"printname\""), Terminal("\"fun\""), NTerminal(ListCat(IdCat("PrintDef")))]
+    )
+  , Rule(
+      LabNoP(Id("DefFlag"))
+    , IdCat("TopDef")
+    , [Terminal("\"flags\""), NTerminal(ListCat(IdCat("FlagDef")))]
+    )
+  , Rule(
+      LabNoP(Id("SimpleCatDef"))
+    , IdCat("CatDef")
+    , [NTerminal(IdCat("Ident")), NTerminal(ListCat(IdCat("DDecl")))]
+    )
+  , Rule(
+      LabNoP(Id("ListCatDefC"))
+    , IdCat("CatDef")
+    , [ Terminal("\"[\"")
+      , NTerminal(IdCat("Ident"))
+      , NTerminal(ListCat(IdCat("DDecl")))
+      , Terminal("\"]\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("ListSizeCatDef"))
+    , IdCat("CatDef")
+    , [ Terminal("\"[\"")
+      , NTerminal(IdCat("Ident"))
+      , NTerminal(ListCat(IdCat("DDecl")))
+      , Terminal("\"]\"")
+      , Terminal("\"{\"")
+      , NTerminal(IdCat("Integer"))
+      , Terminal("\"}\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("FunDefC"))
+    , IdCat("FunDef")
+    , [NTerminal(ListCat(IdCat("Ident"))), Terminal("\":\""), NTerminal(IdCat("Exp"))]
+    )
+  , Rule(
+      LabNoP(Id("DataDefC"))
+    , IdCat("DataDef")
+    , [NTerminal(IdCat("Ident")), Terminal("\"=\""), NTerminal(ListCat(IdCat("DataConstr")))]
+    )
+  , Rule(
+      LabNoP(Id("DataId"))
+    , IdCat("DataConstr")
+    , [NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("DataQId"))
+    , IdCat("DataConstr")
+    , [NTerminal(IdCat("Ident")), Terminal("\".\""), NTerminal(IdCat("Ident"))]
+    )
+  , Separator(MEmpty(), IdCat("DataConstr"), "\"|\"")
+  , Rule(
+      LabNoP(Id("ParDefDir"))
+    , IdCat("ParDef")
+    , [NTerminal(IdCat("Ident")), Terminal("\"=\""), NTerminal(ListCat(IdCat("ParConstr")))]
+    )
+  , Rule(
+      LabNoP(Id("ParDefIndir"))
+    , IdCat("ParDef")
+    , [ NTerminal(IdCat("Ident"))
+      , Terminal("\"=\"")
+      , Terminal("\"(\"")
+      , Terminal("\"in\"")
+      , NTerminal(IdCat("Ident"))
+      , Terminal("\")\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("ParDefAbs"))
+    , IdCat("ParDef")
+    , [NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("ParConstrC"))
+    , IdCat("ParConstr")
+    , [NTerminal(IdCat("Ident")), NTerminal(ListCat(IdCat("DDecl")))]
+    )
+  , Rule(
+      LabNoP(Id("PrintDefC"))
+    , IdCat("PrintDef")
+    , [NTerminal(ListCat(IdCat("Name"))), Terminal("\"=\""), NTerminal(IdCat("Exp"))]
+    )
+  , Rule(
+      LabNoP(Id("FlagDefC"))
+    , IdCat("FlagDef")
+    , [NTerminal(IdCat("Ident")), Terminal("\"=\""), NTerminal(IdCat("Ident"))]
+    )
+  , Terminator(MNonempty(), IdCat("Def"), "\";\"")
+  , Terminator(MNonempty(), IdCat("CatDef"), "\";\"")
+  , Terminator(MNonempty(), IdCat("FunDef"), "\";\"")
+  , Terminator(MNonempty(), IdCat("DataDef"), "\";\"")
+  , Terminator(MNonempty(), IdCat("ParDef"), "\";\"")
+  , Terminator(MNonempty(), IdCat("PrintDef"), "\";\"")
+  , Terminator(MNonempty(), IdCat("FlagDef"), "\";\"")
+  , Separator(MEmpty(), IdCat("ParConstr"), "\"|\"")
+  , Separator(MNonempty(), IdCat("Ident"), "\",\"")
+  , Rule(
+      LabNoP(Id("IdentName"))
+    , IdCat("Name")
+    , [NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("ListNameC"))
+    , IdCat("Name")
+    , [Terminal("\"[\""), NTerminal(IdCat("Ident")), Terminal("\"]\"")]
+    )
+  , Separator(MNonempty(), IdCat("Name"), "\",\"")
+  , Rule(
+      LabNoP(Id("LDDecl"))
+    , IdCat("LocDef")
+    , [NTerminal(ListCat(IdCat("Ident"))), Terminal("\":\""), NTerminal(IdCat("Exp"))]
+    )
+  , Rule(
+      LabNoP(Id("LDDef"))
+    , IdCat("LocDef")
+    , [NTerminal(ListCat(IdCat("Ident"))), Terminal("\"=\""), NTerminal(IdCat("Exp"))]
+    )
+  , Rule(
+      LabNoP(Id("LDFull"))
+    , IdCat("LocDef")
+    , [ NTerminal(ListCat(IdCat("Ident")))
+      , Terminal("\":\"")
+      , NTerminal(IdCat("Exp"))
+      , Terminal("\"=\"")
+      , NTerminal(IdCat("Exp"))
+      ]
+    )
+  , Separator(MEmpty(), IdCat("LocDef"), "\";\"")
+  , Rule(
+      LabNoP(Id("EIdent"))
+    , IdCat("Exp4")
+    , [NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("EConstr"))
+    , IdCat("Exp4")
+    , [Terminal("\"{\""), NTerminal(IdCat("Ident")), Terminal("\"}\"")]
+    )
+  , Rule(
+      LabNoP(Id("ECons"))
+    , IdCat("Exp4")
+    , [Terminal("\"%\""), NTerminal(IdCat("Ident")), Terminal("\"%\"")]
+    )
+  , Rule(
+      LabNoP(Id("ESort"))
+    , IdCat("Exp4")
+    , [NTerminal(IdCat("Sort"))]
+    )
+  , Rule(
+      LabNoP(Id("EString"))
+    , IdCat("Exp4")
+    , [NTerminal(IdCat("String"))]
+    )
+  , Rule(
+      LabNoP(Id("EInt"))
+    , IdCat("Exp4")
+    , [NTerminal(IdCat("Integer"))]
+    )
+  , Rule(
+      LabNoP(Id("EMeta"))
+    , IdCat("Exp4")
+    , [Terminal("\"?\"")]
+    )
+  , Rule(
+      LabNoP(Id("EEmpty"))
+    , IdCat("Exp4")
+    , [Terminal("\"[\""), Terminal("\"]\"")]
+    )
+  , Rule(
+      LabNoP(Id("EData"))
+    , IdCat("Exp4")
+    , [Terminal("\"data\"")]
+    )
+  , Rule(
+      LabNoP(Id("EList"))
+    , IdCat("Exp4")
+    , [ Terminal("\"[\"")
+      , NTerminal(IdCat("Ident"))
+      , NTerminal(IdCat("Exps"))
+      , Terminal("\"]\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("EStrings"))
+    , IdCat("Exp4")
+    , [Terminal("\"[\""), NTerminal(IdCat("String")), Terminal("\"]\"")]
+    )
+  , Rule(
+      LabNoP(Id("ERecord"))
+    , IdCat("Exp4")
+    , [Terminal("\"{\""), NTerminal(ListCat(IdCat("LocDef"))), Terminal("\"}\"")]
+    )
+  , Rule(
+      LabNoP(Id("ETuple"))
+    , IdCat("Exp4")
+    , [Terminal("\"<\""), NTerminal(ListCat(IdCat("TupleComp"))), Terminal("\">\"")]
+    )
+  , Rule(
+      LabNoP(Id("EIndir"))
+    , IdCat("Exp4")
+    , [Terminal("\"(\""), Terminal("\"in\""), NTerminal(IdCat("Ident")), Terminal("\")\"")]
+    )
+  , Rule(
+      LabNoP(Id("ETyped"))
+    , IdCat("Exp4")
+    , [ Terminal("\"<\"")
+      , NTerminal(IdCat("Exp"))
+      , Terminal("\":\"")
+      , NTerminal(IdCat("Exp"))
+      , Terminal("\">\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("EProj"))
+    , IdCat("Exp3")
+    , [NTerminal(IdCat("Exp3")), Terminal("\".\""), NTerminal(IdCat("Label"))]
+    )
+  , Rule(
+      LabNoP(Id("EQConstr"))
+    , IdCat("Exp3")
+    , [ Terminal("\"{\"")
+      , NTerminal(IdCat("Ident"))
+      , Terminal("\".\"")
+      , NTerminal(IdCat("Ident"))
+      , Terminal("\"}\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("EQCons"))
+    , IdCat("Exp3")
+    , [ Terminal("\"%\"")
+      , NTerminal(IdCat("Ident"))
+      , Terminal("\".\"")
+      , NTerminal(IdCat("Ident"))
+      ]
+    )
+  , Rule(
+      LabNoP(Id("EApp"))
+    , IdCat("Exp2")
+    , [NTerminal(IdCat("Exp2")), NTerminal(IdCat("Exp3"))]
+    )
+  , Rule(
+      LabNoP(Id("ETable"))
+    , IdCat("Exp2")
+    , [ Terminal("\"table\"")
+      , Terminal("\"{\"")
+      , NTerminal(ListCat(IdCat("Case")))
+      , Terminal("\"}\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("ETTable"))
+    , IdCat("Exp2")
+    , [ Terminal("\"table\"")
+      , NTerminal(IdCat("Exp4"))
+      , Terminal("\"{\"")
+      , NTerminal(ListCat(IdCat("Case")))
+      , Terminal("\"}\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("EVTable"))
+    , IdCat("Exp2")
+    , [ Terminal("\"table\"")
+      , NTerminal(IdCat("Exp4"))
+      , Terminal("\"[\"")
+      , NTerminal(ListCat(IdCat("Exp")))
+      , Terminal("\"]\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("ECase"))
+    , IdCat("Exp2")
+    , [ Terminal("\"case\"")
+      , NTerminal(IdCat("Exp"))
+      , Terminal("\"of\"")
+      , Terminal("\"{\"")
+      , NTerminal(ListCat(IdCat("Case")))
+      , Terminal("\"}\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("EVariants"))
+    , IdCat("Exp2")
+    , [ Terminal("\"variants\"")
+      , Terminal("\"{\"")
+      , NTerminal(ListCat(IdCat("Exp")))
+      , Terminal("\"}\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("EPre"))
+    , IdCat("Exp2")
+    , [ Terminal("\"pre\"")
+      , Terminal("\"{\"")
+      , NTerminal(IdCat("Exp"))
+      , Terminal("\";\"")
+      , NTerminal(ListCat(IdCat("Altern")))
+      , Terminal("\"}\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("EStrs"))
+    , IdCat("Exp2")
+    , [ Terminal("\"strs\"")
+      , Terminal("\"{\"")
+      , NTerminal(ListCat(IdCat("Exp")))
+      , Terminal("\"}\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("EConAt"))
+    , IdCat("Exp2")
+    , [NTerminal(IdCat("Ident")), Terminal("\"@\""), NTerminal(IdCat("Exp4"))]
+    )
+  , Rule(
+      LabNoP(Id("ESelect"))
+    , IdCat("Exp1")
+    , [NTerminal(IdCat("Exp1")), Terminal("\"!\""), NTerminal(IdCat("Exp2"))]
+    )
+  , Rule(
+      LabNoP(Id("ETupTyp"))
+    , IdCat("Exp1")
+    , [NTerminal(IdCat("Exp1")), Terminal("\"*\""), NTerminal(IdCat("Exp2"))]
+    )
+  , Rule(
+      LabNoP(Id("EExtend"))
+    , IdCat("Exp1")
+    , [NTerminal(IdCat("Exp1")), Terminal("\"**\""), NTerminal(IdCat("Exp2"))]
+    )
+  , Rule(
+      LabNoP(Id("EAbstr"))
+    , IdCat("Exp")
+    , [ Terminal("\"\\\\\"")
+      , NTerminal(ListCat(IdCat("Bind")))
+      , Terminal("\"->\"")
+      , NTerminal(IdCat("Exp"))
+      ]
+    )
+  , Rule(
+      LabNoP(Id("ECTable"))
+    , IdCat("Exp")
+    , [ Terminal("\"\\\\\"")
+      , Terminal("\"\\\\\"")
+      , NTerminal(ListCat(IdCat("Bind")))
+      , Terminal("\"=>\"")
+      , NTerminal(IdCat("Exp"))
+      ]
+    )
+  , Rule(
+      LabNoP(Id("EProd"))
+    , IdCat("Exp")
+    , [NTerminal(IdCat("Decl")), Terminal("\"->\""), NTerminal(IdCat("Exp"))]
+    )
+  , Rule(
+      LabNoP(Id("ETType"))
+    , IdCat("Exp")
+    , [NTerminal(IdCat("Exp1")), Terminal("\"=>\""), NTerminal(IdCat("Exp"))]
+    )
+  , Rule(
+      LabNoP(Id("EConcat"))
+    , IdCat("Exp")
+    , [NTerminal(IdCat("Exp1")), Terminal("\"++\""), NTerminal(IdCat("Exp"))]
+    )
+  , Rule(
+      LabNoP(Id("EGlue"))
+    , IdCat("Exp")
+    , [NTerminal(IdCat("Exp1")), Terminal("\"+\""), NTerminal(IdCat("Exp"))]
+    )
+  , Rule(
+      LabNoP(Id("ELet"))
+    , IdCat("Exp")
+    , [ Terminal("\"let\"")
+      , Terminal("\"{\"")
+      , NTerminal(ListCat(IdCat("LocDef")))
+      , Terminal("\"}\"")
+      , Terminal("\"in\"")
+      , NTerminal(IdCat("Exp"))
+      ]
+    )
+  , Rule(
+      LabNoP(Id("ELetb"))
+    , IdCat("Exp")
+    , [ Terminal("\"let\"")
+      , NTerminal(ListCat(IdCat("LocDef")))
+      , Terminal("\"in\"")
+      , NTerminal(IdCat("Exp"))
+      ]
+    )
+  , Rule(
+      LabNoP(Id("EWhere"))
+    , IdCat("Exp")
+    , [ NTerminal(IdCat("Exp1"))
+      , Terminal("\"where\"")
+      , Terminal("\"{\"")
+      , NTerminal(ListCat(IdCat("LocDef")))
+      , Terminal("\"}\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("EEqs"))
+    , IdCat("Exp")
+    , [ Terminal("\"fn\"")
+      , Terminal("\"{\"")
+      , NTerminal(ListCat(IdCat("Equation")))
+      , Terminal("\"}\"")
+      ]
+    )
+  , Coercions("Exp", "4")
+  , Separator(MEmpty(), IdCat("Exp"), "\";\"")
+  , Rule(LabNoP(Id("NilExp")), IdCat("Exps"), [])
+  , Rule(
+      LabNoP(Id("ConsExp"))
+    , IdCat("Exps")
+    , [NTerminal(IdCat("Exp4")), NTerminal(IdCat("Exps"))]
+    )
+  , Rule(
+      LabNoP(Id("PW"))
+    , IdCat("Patt1")
+    , [Terminal("\"_\"")]
+    )
+  , Rule(
+      LabNoP(Id("PV"))
+    , IdCat("Patt1")
+    , [NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("PCon"))
+    , IdCat("Patt1")
+    , [Terminal("\"{\""), NTerminal(IdCat("Ident")), Terminal("\"}\"")]
+    )
+  , Rule(
+      LabNoP(Id("PQ"))
+    , IdCat("Patt1")
+    , [NTerminal(IdCat("Ident")), Terminal("\".\""), NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("PInt"))
+    , IdCat("Patt1")
+    , [NTerminal(IdCat("Integer"))]
+    )
+  , Rule(
+      LabNoP(Id("PStr"))
+    , IdCat("Patt1")
+    , [NTerminal(IdCat("String"))]
+    )
+  , Rule(
+      LabNoP(Id("PR"))
+    , IdCat("Patt1")
+    , [Terminal("\"{\""), NTerminal(ListCat(IdCat("PattAss"))), Terminal("\"}\"")]
+    )
+  , Rule(
+      LabNoP(Id("PTup"))
+    , IdCat("Patt1")
+    , [Terminal("\"<\""), NTerminal(ListCat(IdCat("PattTupleComp"))), Terminal("\">\"")]
+    )
+  , Rule(
+      LabNoP(Id("PC"))
+    , IdCat("Patt")
+    , [NTerminal(IdCat("Ident")), NTerminal(ListCat(IdCat("Patt")))]
+    )
+  , Rule(
+      LabNoP(Id("PQC"))
+    , IdCat("Patt")
+    , [ NTerminal(IdCat("Ident"))
+      , Terminal("\".\"")
+      , NTerminal(IdCat("Ident"))
+      , NTerminal(ListCat(IdCat("Patt")))
+      ]
+    )
+  , Coercions("Patt", "1")
+  , Rule(
+      LabNoP(Id("PA"))
+    , IdCat("PattAss")
+    , [NTerminal(ListCat(IdCat("Ident"))), Terminal("\"=\""), NTerminal(IdCat("Patt"))]
+    )
+  , Rule(
+      LabNoP(Id("LIdent"))
+    , IdCat("Label")
+    , [NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("LVar"))
+    , IdCat("Label")
+    , [Terminal("\"$\""), NTerminal(IdCat("Integer"))]
+    )
+  , Rules(
+      "Sort"
+    , [ MkRHS([Terminal("\"Type\"")])
+      , MkRHS([Terminal("\"PType\"")])
+      , MkRHS([Terminal("\"Tok\"")])
+      , MkRHS([Terminal("\"Str\"")])
+      , MkRHS([Terminal("\"Strs\"")])
+      ]
+    )
+  , Separator(MEmpty(), IdCat("PattAss"), "\";\"")
+  , Rule(
+      LabNoP(Id("AltP"))
+    , IdCat("PattAlt")
+    , [NTerminal(IdCat("Patt"))]
+    )
+  , Rule(
+      LabNoP(ListOne())
+    , ListCat(IdCat("Patt"))
+    , [NTerminal(IdCat("Patt1"))]
+    )
+  , Rule(
+      LabNoP(ListCons())
+    , ListCat(IdCat("Patt"))
+    , [NTerminal(IdCat("Patt1")), NTerminal(ListCat(IdCat("Patt")))]
+    )
+  , Separator(MNonempty(), IdCat("PattAlt"), "\"|\"")
+  , Rule(
+      LabNoP(Id("BIdent"))
+    , IdCat("Bind")
+    , [NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("BWild"))
+    , IdCat("Bind")
+    , [Terminal("\"_\"")]
+    )
+  , Separator(MEmpty(), IdCat("Bind"), "\",\"")
+  , Rule(
+      LabNoP(Id("DDec"))
+    , IdCat("Decl")
+    , [ Terminal("\"(\"")
+      , NTerminal(ListCat(IdCat("Bind")))
+      , Terminal("\":\"")
+      , NTerminal(IdCat("Exp"))
+      , Terminal("\")\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("DExp"))
+    , IdCat("Decl")
+    , [NTerminal(IdCat("Exp2"))]
+    )
+  , Rule(
+      LabNoP(Id("TComp"))
+    , IdCat("TupleComp")
+    , [NTerminal(IdCat("Exp"))]
+    )
+  , Rule(
+      LabNoP(Id("PTComp"))
+    , IdCat("PattTupleComp")
+    , [NTerminal(IdCat("Patt"))]
+    )
+  , Separator(MEmpty(), IdCat("TupleComp"), "\",\"")
+  , Separator(MEmpty(), IdCat("PattTupleComp"), "\",\"")
+  , Rule(
+      LabNoP(Id("CaseC"))
+    , IdCat("Case")
+    , [NTerminal(ListCat(IdCat("PattAlt"))), Terminal("\"=>\""), NTerminal(IdCat("Exp"))]
+    )
+  , Separator(MNonempty(), IdCat("Case"), "\";\"")
+  , Rule(
+      LabNoP(Id("Equ"))
+    , IdCat("Equation")
+    , [NTerminal(ListCat(IdCat("Patt"))), Terminal("\"->\""), NTerminal(IdCat("Exp"))]
+    )
+  , Separator(MEmpty(), IdCat("Equation"), "\";\"")
+  , Rule(
+      LabNoP(Id("Alt"))
+    , IdCat("Altern")
+    , [NTerminal(IdCat("Exp")), Terminal("\"/\""), NTerminal(IdCat("Exp"))]
+    )
+  , Separator(MEmpty(), IdCat("Altern"), "\";\"")
+  , Rule(
+      LabNoP(Id("DDDec"))
+    , IdCat("DDecl")
+    , [ Terminal("\"(\"")
+      , NTerminal(ListCat(IdCat("Bind")))
+      , Terminal("\":\"")
+      , NTerminal(IdCat("Exp"))
+      , Terminal("\")\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("DDExp"))
+    , IdCat("DDecl")
+    , [NTerminal(IdCat("Exp4"))]
+    )
+  , Separator(MEmpty(), IdCat("DDecl"), "\"\"")
+  , Rule(
+      LabNoP(Id("OldGr"))
+    , IdCat("OldGrammar")
+    , [NTerminal(IdCat("IncludeDecl")), NTerminal(ListCat(IdCat("TopDef")))]
+    )
+  , Rule(LabNoP(Id("NoIncl")), IdCat("IncludeDecl"), [])
+  , Rule(
+      LabNoP(Id("Incl"))
+    , IdCat("IncludeDecl")
+    , [Terminal("\"include\""), NTerminal(ListCat(IdCat("FileName")))]
+    )
+  , Rule(
+      LabNoP(Id("FString"))
+    , IdCat("FileName")
+    , [NTerminal(IdCat("String"))]
+    )
+  , Terminator(MNonempty(), IdCat("FileName"), "\";\"")
+  , Rule(
+      LabNoP(Id("FIdent"))
+    , IdCat("FileName")
+    , [NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("FSlash"))
+    , IdCat("FileName")
+    , [Terminal("\"/\""), NTerminal(IdCat("FileName"))]
+    )
+  , Rule(
+      LabNoP(Id("FDot"))
+    , IdCat("FileName")
+    , [Terminal("\".\""), NTerminal(IdCat("FileName"))]
+    )
+  , Rule(
+      LabNoP(Id("FMinus"))
+    , IdCat("FileName")
+    , [Terminal("\"-\""), NTerminal(IdCat("FileName"))]
+    )
+  , Rule(
+      LabNoP(Id("FAddId"))
+    , IdCat("FileName")
+    , [NTerminal(IdCat("Ident")), NTerminal(IdCat("FileName"))]
+    )
+  , Token(
+      "LString"
+    , RSeq(
+        RSeq(RChar("'\\''"), RStar(RMinus(RAny(), RChar("'\\''"))))
+      , RChar("'\\''")
+      )
+    )
+  , Rule(
+      LabNoP(Id("ELString"))
+    , IdCat("Exp4")
+    , [NTerminal(IdCat("LString"))]
+    )
+  , Rule(
+      LabNoP(Id("ELin"))
+    , IdCat("Exp2")
+    , [Terminal("\"Lin\""), NTerminal(IdCat("Ident"))]
+    )
+  , Rule(
+      LabNoP(Id("DefPrintOld"))
+    , IdCat("TopDef")
+    , [Terminal("\"printname\""), NTerminal(ListCat(IdCat("PrintDef")))]
+    )
+  , Rule(
+      LabNoP(Id("DefLintype"))
+    , IdCat("TopDef")
+    , [Terminal("\"lintype\""), NTerminal(ListCat(IdCat("Def")))]
+    )
+  , Rule(
+      LabNoP(Id("DefPattern"))
+    , IdCat("TopDef")
+    , [Terminal("\"pattern\""), NTerminal(ListCat(IdCat("Def")))]
+    )
+  , Rule(
+      LabNoP(Id("DefPackage"))
+    , IdCat("TopDef")
+    , [ Terminal("\"package\"")
+      , NTerminal(IdCat("Ident"))
+      , Terminal("\"=\"")
+      , Terminal("\"{\"")
+      , NTerminal(ListCat(IdCat("TopDef")))
+      , Terminal("\"}\"")
+      , Terminal("\";\"")
+      ]
+    )
+  , Rule(
+      LabNoP(Id("DefVars"))
+    , IdCat("TopDef")
+    , [Terminal("\"var\""), NTerminal(ListCat(IdCat("Def")))]
+    )
+  , Rule(
+      LabNoP(Id("DefTokenizer"))
+    , IdCat("TopDef")
+    , [Terminal("\"tokenizer\""), NTerminal(IdCat("Ident")), Terminal("\";\"")]
+    )
+  ]
+)

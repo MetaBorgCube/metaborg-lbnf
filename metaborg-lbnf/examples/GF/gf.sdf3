@@ -1,0 +1,158 @@
+module gf
+imports Common
+context-free syntax
+  Grammar.Gr = [[{ModDef ""}*]""]
+  ModDef.MMain = [grammar [ID] = { abstract = [ID] ; [{ConcSpec ";"}*] }]
+  ConcSpec.ConcSpecC = [[ID] = [ConcExp]]
+  ConcExp.ConcExpC = [[ID] [{Transfer ""}*]]
+  Transfer.TransferIn = [( transfer in [OpenDecl] )]
+  Transfer.TransferOut = [( transfer out [OpenDecl] )]
+  ModDef.MModule = [[ComplMod] [ModType] = [ModBody]]
+  ModType.MTAbstract = [abstract [ID]]
+  ModType.MTResource = [resource [ID]]
+  ModType.MTInterface = [interface [ID]]
+  ModType.MTConcrete = [concrete [ID] of [ID]]
+  ModType.MTInstance = [instance [ID] of [ID]]
+  ModType.MTTransfer = [transfer [ID] : [OpenDecl] -> [OpenDecl]]
+  ModBody.MBody = [[Extend] [Opens] { [{TopDef ""}*] }]
+  ModBody.MWith = [[ID] with [{OpenDecl ","}*]]
+  ModBody.MWithE = [[{Included ","}*] ** [ID] with [{OpenDecl ","}*]]
+  ModBody.MReuse = [reuse [ID]]
+  ModBody.MUnion = [union [{Included ","}*]]
+  Extend.Ext = [[{Included ","}*] **]
+  Extend.NoExt = []
+  Opens.NoOpens = []
+  Opens.OpenIn = [open [{OpenDecl ","}*] in]
+  OpenDecl.OName = ID
+  OpenDecl.OQualQO = [( [QualOpen] [ID] )]
+  OpenDecl.OQual = [( [QualOpen] [ID] = [ID] )]
+  ComplMod.CMCompl = []
+  ComplMod.CMIncompl = [incomplete]
+  QualOpen.QOCompl = []
+  QualOpen.QOIncompl = [incomplete]
+  QualOpen.QOInterface = [interface]
+  Included.IAll = ID
+  Included.ISome = <<ID> [ <{ID ","}+> ]>
+  Included.IMinus = <<ID> - [ <{ID ","}+> ]>
+  Def.DDeclC = [[{Name ","}+] : [Exp]]
+  Def.DDef = [[{Name ","}+] = [Exp]]
+  Def.DPatt = [[Name] [{Patt " "}*] = [Exp]]
+  Def.DFull = [[{Name ","}+] : [Exp] = [Exp]]
+  TopDef.DefCat = [cat [{CatDef " "}+];]
+  TopDef.DefFun = [fun [{FunDef " "}+];]
+  TopDef.DefFunData = [data [{FunDef " "}+];]
+  TopDef.DefDef = [def [{Def " "}+];]
+  TopDef.DefData = [data [{DataDef " "}+];]
+  TopDef.DefTrans = [transfer [{Def " "}+];]
+  TopDef.DefPar = [param [{ParDef " "}+];]
+  TopDef.DefOper = [oper [{Def " "}+];]
+  TopDef.DefLincat = [lincat [{PrintDef " "}+];]
+  TopDef.DefLindef = [lindef [{Def " "}+];]
+  TopDef.DefLin = [lin [{Def " "}+];]
+  TopDef.DefPrintCat = [printname cat [{PrintDef " "}+];]
+  TopDef.DefPrintFun = [printname fun [{PrintDef " "}+];]
+  TopDef.DefFlag = [flags [{FlagDef " "}+];]
+  CatDef.SimpleCatDef = [[ID] [{DDecl ""}*]]
+  CatDef.ListCatDefC = <[ <ID> <{DDecl ""}*> ]>
+  CatDef.ListSizeCatDef = <[ <ID> <{DDecl ""}*> ] { <INT> }>
+  FunDef.FunDefC = [[{ID ","}+] : [Exp]]
+  DataDef.DataDefC = [[ID] = [{DataConstr "|"}*]]
+  DataConstr.DataId = ID
+  DataConstr.DataQId = [[ID] . [ID]]
+  ParDef.ParDefDir = [[ID] = [{ParConstr "|"}*]]
+  ParDef.ParDefIndir = [[ID] = ( in [ID] )]
+  ParDef.ParDefAbs = ID
+  ParConstr.ParConstrC = [[ID] [{DDecl ""}*]]
+  PrintDef.PrintDefC = [[{Name ","}+] = [Exp]]
+  FlagDef.FlagDefC = [[ID] = [ID]]
+  Name.IdentName = ID
+  Name.ListNameC = <[ <ID> ]>
+  LocDef.LDDecl = [[{ID ","}+] : [Exp]]
+  LocDef.LDDef = [[{ID ","}+] = [Exp]]
+  LocDef.LDFull = [[{ID ","}+] : [Exp] = [Exp]]
+  Exp4.EIdent = ID
+  Exp4.EConstr = [{ [ID] }]
+  Exp4.ECons = [% [ID] %]
+  Exp4.ESort = Sort
+  Exp4.EString = STRING
+  Exp4.EInt = INT
+  Exp4.EMeta = [?]
+  Exp4.EEmpty = <[ ]>
+  Exp4.EData = [data]
+  Exp4.EList = <[ <ID> <Exps> ]>
+  Exp4.EStrings = <[ <STRING> ]>
+  Exp4.ERecord = [{ [{LocDef ";"}*] }]
+  Exp4.ETuple = [< [{TupleComp ","}*] >]
+  Exp4.EIndir = [( in [ID] )]
+  Exp4.ETyped = [< [Exp] : [Exp] >]
+  Exp3.EProj = [[Exp3] . [Label]]
+  Exp3.EQConstr = [{ [ID] . [ID] }]
+  Exp3.EQCons = [% [ID] . [ID]]
+  Exp2.EApp = [[Exp2] [Exp3]]
+  Exp2.ETable = [table { [{Case ";"}+] }]
+  Exp2.ETTable = [table [Exp4] { [{Case ";"}+] }]
+  Exp2.EVTable = <table <Exp4> [ <{Exp ";"}*> ]>
+  Exp2.ECase = [case [Exp] of { [{Case ";"}+] }]
+  Exp2.EVariants = [variants { [{Exp ";"}*] }]
+  Exp2.EPre = [pre { [Exp] ; [{Altern ";"}*] }]
+  Exp2.EStrs = [strs { [{Exp ";"}*] }]
+  Exp2.EConAt = [[ID] @ [Exp4]]
+  Exp1.ESelect = [[Exp1] ! [Exp2]]
+  Exp1.ETupTyp = [[Exp1] * [Exp2]]
+  Exp1.EExtend = [[Exp1] ** [Exp2]]
+  Exp.EAbstr = [\ [{Bind ","}*] -> [Exp]]
+  Exp.ECTable = [\ \ [{Bind ","}*] => [Exp]]
+  Exp.EProd = [[Decl] -> [Exp]]
+  Exp.ETType = [[Exp1] => [Exp]]
+  Exp.EConcat = [[Exp1] ++ [Exp]]
+  Exp.EGlue = [[Exp1] + [Exp]]
+  Exp.ELet = [let { [{LocDef ";"}*] } in [Exp]]
+  Exp.ELetb = [let [{LocDef ";"}*] in [Exp]]
+  Exp.EWhere = [[Exp1] where { [{LocDef ";"}*] }]
+  Exp.EEqs = [fn { [{Equation ";"}*] }]
+  Exps.NilExp = []
+  Exps.ConsExp = [[Exp4] [Exps]]
+  Patt1.PW = [_]
+  Patt1.PV = ID
+  Patt1.PCon = [{ [ID] }]
+  Patt1.PQ = [[ID] . [ID]]
+  Patt1.PInt = INT
+  Patt1.PStr = STRING
+  Patt1.PR = [{ [{PattAss ";"}*] }]
+  Patt1.PTup = [< [{PattTupleComp ","}*] >]
+  Patt.PC = [[ID] [{Patt " "}*]]
+  Patt.PQC = [[ID] . [ID] [{Patt " "}*]]
+  PattAss.PA = [[{ID ","}+] = [Patt]]
+  Label.LIdent = ID
+  Label.LVar = [$ [INT]]
+  PattAlt.AltP = Patt
+  Bind.BIdent = ID
+  Bind.BWild = [_]
+  Decl.DDec = [( [{Bind ","}*] : [Exp] )]
+  Decl.DExp = Exp2
+  TupleComp.TComp = Exp
+  PattTupleComp.PTComp = Patt
+  Case.CaseC = [[{PattAlt "|"}+] => [Exp]]
+  Equation.Equ = [[{Patt " "}*] -> [Exp]]
+  Altern.Alt = [[Exp] / [Exp]]
+  DDecl.DDDec = [( [{Bind ","}*] : [Exp] )]
+  DDecl.DDExp = Exp4
+  OldGrammar.OldGr = [[IncludeDecl] [{TopDef ""}*]]
+  IncludeDecl.NoIncl = []
+  IncludeDecl.Incl = [include [{FileName " "}+];]
+  FileName.FString = STRING
+  FileName.FIdent = ID
+  FileName.FSlash = [/ [FileName]]
+  FileName.FDot = [. [FileName]]
+  FileName.FMinus = [- [FileName]]
+  FileName.FAddId = [[ID] [FileName]]
+  Exp4.ELString = LString
+  Exp2.ELin = [Lin [ID]]
+  TopDef.DefPrintOld = [printname [{PrintDef " "}+];]
+  TopDef.DefLintype = [lintype [{Def " "}+];]
+  TopDef.DefPattern = [pattern [{Def " "}+];]
+  TopDef.DefPackage = [package [ID] = { [{TopDef ""}*] } ;]
+  TopDef.DefVars = [var [{Def " "}+];]
+  TopDef.DefTokenizer = [tokenizer [ID] ;]
+lexical syntax
+  LString = '\'' (/* ~[] - '\'' */)* '\''

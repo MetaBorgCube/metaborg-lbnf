@@ -1,0 +1,39 @@
+module C4
+imports Common
+context-free syntax
+  Progr.Program = [int main ( ) { [{Dec ";"}*] [{Stm " "}*] }]
+  Dec.Decl = [[Typ] [{ID ","}*]]
+  Stm.SBlock = [{ [{Dec ";"}*] [{Stm " "}*] }]
+  Stm.SAss = [[ID] = [Exp] ;]
+  Stm.SIncr = [[ID] ++ ;]
+  Stm.SDecr = [[ID] -- ;]
+  Stm.SPrint = [printInt ( [Exp] ) ;]
+  Stm.SIf = [if ( [Exp] ) [Stm] else [Stm]]
+  Stm.SWhile = [while ( [Exp] ) [Stm]]
+  Stm.SReturn = [return [Exp] ;]
+  Exp.EOpA = [[Exp0] [Op] [Exp0]]
+  Exp0.EOpB = [[Exp1] [Op0] [Exp1]]
+  Exp1.EOpC = [[Exp1] [Op1] [Exp2]]
+  Exp2.EOpD = [[Exp2] [Op2] [Exp3]]
+  Exp.EOpE = [[Exp1] [Op] [Exp1]]
+  Exp3.EVar = ID
+  Exp3.EInt = INT
+  Exp3.EString = STRING
+  Exp3.EChar = Char
+  Exp3.EDouble = Double
+  Exp = Exp0
+  Exp0 = Exp1
+  Exp1 = Exp2
+  Exp2 = Exp3
+  Op1.OPlus = [+]
+  Op2.OTimes = [*]
+  Op1.OMinus = [-]
+  Op0.OLt = [<]
+  Op0.OGt = [>]
+  Op0.OEq = [==]
+  Op.OAnd = [&&]
+  Op.OOr = [||]
+  Typ.TInt = [int]
+  Typ.TDouble = [double]
+lexical syntax
+  

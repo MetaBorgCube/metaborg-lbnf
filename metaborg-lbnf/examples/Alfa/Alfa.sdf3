@@ -1,0 +1,72 @@
+module Alfa
+imports Common
+context-free syntax
+  Module.Module = [{ [{Decl ";"}*] }]
+  Decl.DDef = [[{DefAttr ""}*] [Def]]
+  Decl.DImp = Import
+  Def.Value = [[AIdent] [{VarDecl ""}*]"" :: [Exp] = [Exp]]
+  Def.Binding = [[AIdent] = [Exp]]
+  Def.Package = [package [AIdent] [{Typing ""}*]"" where [PackageBody]]
+  Def.Open = [open [Exp] use [{OpenArg ","}*]]
+  Def.Data = [data [AIdent] [{Typing ""}*]"" = [{Constructor "|"}*]]
+  Def.Type = [type [AIdent] [{Typing ""}*]"" = [Exp]]
+  Def.Axiom = [postulate [AIdent] [{Typing ""}*]"" :: [Exp]]
+  Def.Mutual = [mutual { [{Def ";"}*] }]
+  Def.Commt = Comment
+  Exp4.EVar = AIdent
+  Exp4.ECon = [[AIdent] @_]
+  Exp4.ESet = [Set]
+  Exp4.EType = [Type]
+  Exp4.EMeta = [?]
+  Exp4.EStar = [# [INT]]
+  Exp4.EMetaU = [_]
+  Exp4.EString = STRING
+  Exp4.EChar = Char
+  Exp4.EInt = INT
+  Exp4.EDouble = Double
+  Exp3.EProj = [[Exp3] . [AIdent]]
+  Exp1.EApp = [[Exp1] [Exp2]]
+  Exp.EInfix = [[Exp1] [Infix] [Exp1]]
+  Exp1.ESig = [sig { [{FieldDecl ";"}*] }]
+  Exp1.EStr = [struct { [{Binding ";"}*] }]
+  Exp.ESum = [data [{Constructor "|"}*]]
+  Exp.EPi = [[VarDecl] [Arrow] [Exp]]
+  Exp.EFun = [[Exp1] [Arrow] [Exp]]
+  Exp.EAbs = [\ [VarDecl] [Arrow] [Exp]]
+  Exp.EAbsUnt = [\ [{AIdent ""}*] [Arrow] [Exp]]
+  Exp.ELet = [let { [{Decl ";"}*] } in [Exp]]
+  Exp.EOpen = [open [Exp] use [{OpenArg ","}*] in [Exp]]
+  Exp.ECase = [case [Exp] of { [{Branch ";"}*] }]
+  Exp.EIData = [idata [{VarDecl ""}*]"" [{IndConstructor "|"}*]]
+  Exp.ECommL = [[Comment] [Exp1]]
+  Exp.ECommR = [[Exp1] [Comment]]
+  Arrow.AShow = [->]
+  Arrow.AHide = [|->]
+  Typing.TDecl = VarDecl
+  Typing.TExp = Exp2
+  VarDecl.VDecl = [( [{Bound ","}+] :: [Exp] )]
+  Bound.BVar = AIdent
+  Bound.BHide = [| [AIdent]]
+  FieldDecl.FDecl = [[AIdent] :: [Exp]]
+  Branch.BranchCon = [( [AIdent] [{AIdent ""}*] ) -> [Exp]]
+  Branch.BranchInf = [( [AIdent] [Infix] [AIdent] ) -> [Exp]]
+  Branch.BranchVar = [[AIdent] -> [Exp]]
+  Constructor.Cnstr = [[AIdent] [{Typing ""}*]""]
+  IndConstructor.ICnstr = [[AIdent] [{Typing ""}*]"" :: _ [{Exp2 ""}*]""]
+  Binding.Bind = [[AIdent] = [Exp]]
+  PackageBody.PackageDef = [{ [{Decl ";"}*] }]
+  PackageBody.PackageInst = Exp
+  OpenArg.OArg = [[{DefAttr ""}*] [AIdent]]
+  OpenArg.OArgT = [[{DefAttr ""}*] [AIdent] :: [Exp]]
+  OpenArg.OArgD = [[{DefAttr ""}*] [AIdent] = [Exp]]
+  OpenArg.OArgTD = [[{DefAttr ""}*] [AIdent] :: [Exp] = [Exp]]
+  DefAttr.Private = [private]
+  DefAttr.Public = [public]
+  DefAttr.Abstract = [abstract]
+  DefAttr.Concrete = [concrete]
+  Import.Import = [import [STRING] ;]
+  AIdent.I = [( [Infix] )]
+  AIdent.F = PIdent
+lexical syntax
+  Comment = '{' '-' (/* ~[] - '-' */ | '-' /* ~[] - '}' */)* ('-')+ '}'
+  Infix = ([.:-^*+=<>&%$!#%|/\])+

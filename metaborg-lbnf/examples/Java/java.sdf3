@@ -1,0 +1,217 @@
+module java
+imports Common
+context-free syntax
+  ProgramFile.Prpkg = [package [{ID "."}+] [{Semi ""}*]"" [{Import ""}*] [{TypeDecl ""}*]]
+  ProgramFile.ProgF = [[{Import ""}*] [{TypeDecl ""}*]]
+  Import.ImportN = [import [{ID "."}+] [{Semi ""}*]""]
+  Import.ImportA = [import [{ID "."}+] .* [{Semi ""}*]""]
+  TypeDecl.TypeDecl = [[ClassHeader] { [{FieldDeclaration ""}*]"" }]
+  ClassHeader.ClassDec = [[{Modifier ""}*]"" class [ID]]
+  ClassHeader.ClassDecE = [[{Modifier ""}*]"" class [ID] extends [{TypeName ","}+]]
+  ClassHeader.ClassDecI = [[{Modifier ""}*]"" class [ID] implements [{TypeName ","}+]]
+  ClassHeader.ClassDecEI = [[{Modifier ""}*]"" class [ID] extends [{TypeName ","}+] implements [{TypeName ","}+]]
+  ClassHeader.InterDec = [[{Modifier ""}*]"" interface [ID]]
+  ClassHeader.InterDecE = [[{Modifier ""}*]"" interface [ID] extends [{TypeName ","}+]]
+  ClassHeader.InterDecI = [[{Modifier ""}*]"" interface [ID] implements [{TypeName ","}+]]
+  ClassHeader.InterDecEI = [[{Modifier ""}*]"" interface [ID] extends [{TypeName ","}+] implements [{TypeName ","}+]]
+  FieldDeclaration.Dvar = [[{Modifier ""}*]"" [TypeSpec] [{VarDecl ","}+] ;]
+  FieldDeclaration.Dmth = [[{Modifier ""}*]"" [TypeSpec] [MethodDecl] [MethodBody]]
+  FieldDeclaration.Dmthth = [[{Modifier ""}*]"" [TypeSpec] [MethodDecl] throws [{TypeName ","}+] [MethodBody]]
+  FieldDeclaration.Dconst = [[{Modifier ""}*]"" [ID] ( [{Parameter ","}*] ) [Body]]
+  FieldDeclaration.Dconstt = [[{Modifier ""}*]"" [ID] ( [{Parameter ","}*] ) throws [{TypeName ","}+] [Body]]
+  FieldDeclaration.Dblk = Body
+  FieldDeclaration.Dinnerclass = TypeDecl
+  MethodBody.IBody = [;]
+  MethodBody.MBody = Body
+  LVarStatement.LVar = [[TypeSpec] [{VarDecl ","}+] ;]
+  LVarStatement.LVarf = [final [TypeSpec] [{VarDecl ","}+] ;]
+  LVarStatement.Statem = Stm
+  Body.Body = [{ [{LVarStatement ""}*] }]
+  Stm.Sem = [;]
+  Stm.Lbl = [[ID] :]
+  Stm.Case = [case [Exp] :]
+  Stm.Dflt = [default :]
+  Stm.Exps = [[Exp] ;]
+  Stm.LV = [{ [{LVarStatement ""}*] }]
+  Stm.Jmp = JumpStm
+  Stm.Grd = GuardStm
+  Stm.Iter = IterStm
+  Stm.Sel = SelectionStm
+  DeclaratorName.DeclName = ID
+  DeclaratorName.DeclArray = [[ID] [{BracketsOpt ""}+]]
+  VarDecl.VDeclAssign = [[DeclaratorName] = [VariableInits]]
+  VarDecl.VDecl = ID
+  VariableInits.IExp = Exp
+  VariableInits.IEmpt = [{ }]
+  VariableInits.IArri = [{ [ArrayInits] }]
+  ArrayInits.Vainit = VariableInits
+  ArrayInits.Vai = [[ArrayInits] , [VariableInits]]
+  ArrayInits.Vais = [[ArrayInits] ,]
+  MethodDecl.Mth = [[DeclaratorName] ( [{Parameter ","}*] )]
+  MethodDecl.MthdArr = [[MethodDecl] [BracketsOpt]]
+  Parameter.Param = [[TypeSpec] [DeclaratorName]]
+  Parameter.Pfinal = [final [TypeSpec] [DeclaratorName]]
+  SelectionStm.Ifone = [if ( [Exp] ) [Stm] [{Elseif ""}*]""]
+  SelectionStm.If = [if ( [Exp] ) [Stm] [{Elseif ""}*]"" else [Stm]]
+  SelectionStm.Switch = [switch ( [Exp] ) [Body]]
+  Elseif.Elseif = [else if ( [Exp] ) [Stm]]
+  JumpStm.Break = [break ;]
+  JumpStm.Brlabel = [break [ID] ;]
+  JumpStm.Continue = [continue ;]
+  JumpStm.Continuelabel = [continue [ID] ;]
+  JumpStm.Return = [return ;]
+  JumpStm.ReturnExp = [return [Exp] ;]
+  JumpStm.Throw = [throw [Exp] ;]
+  GuardStm.Synchronized = [synchronized ( [Exp] ) [Body]]
+  GuardStm.Try = [try [Body] [{Catch ""}*]]
+  GuardStm.Tryfinally = [try [Body] [{Catch ""}*] finally [Body]]
+  Catch.Catch1 = [catch ( [TypeSpec] [ID] ) [Body]]
+  Catch.Catch2 = [catch ( [TypeSpec] ) [Body]]
+  IterStm.While = [while ( [Exp] ) [Stm]]
+  IterStm.Do = [do [Stm] while ( [Exp] )]
+  IterStm.For = [for ( [ForInit] [{Exp ","}*] ; [{Exp ","}*] ) [Stm]]
+  ForInit.Exprs1 = [[{Exp ","}*] ;]
+  ForInit.DVar = [[TypeSpec] [{VarDecl ","}+] ;]
+  ForInit.DVarf = [final [TypeSpec] [{VarDecl ","}+] ;]
+  Modifier.Mabstract = [abstract]
+  Modifier.Mfinal = [final]
+  Modifier.Mpublic = [public]
+  Modifier.Mprotected = [protected]
+  Modifier.Mprivate = [private]
+  Modifier.Mtransient = [transient]
+  Modifier.Mvolatile = [volatile]
+  Modifier.Mnative = [native]
+  Modifier.Msync = [synchronized]
+  Modifier.Mstatic = [static]
+  BasicType.Tchar = [char]
+  BasicType.Tshort = [short]
+  BasicType.Tint = [int]
+  BasicType.Tlong = [long]
+  BasicType.Tfloat = [float]
+  BasicType.Tdouble = [double]
+  BasicType.Tbyte = [byte]
+  BasicType.Tboolean = [boolean]
+  TypeSpec.ArrayType = [[TypeName] [{BracketsOpt ""}+]]
+  TypeSpec.TypeName = TypeName
+  TypeName.BuiltIn = BasicType
+  TypeName.ClassType = [[{ID "."}+]]
+  BracketsOpt.BracketsOpt = <[ ]>
+  Exp.Eassign = [[Exp14] [Assignmentop] [Exp]]
+  Exp.Etype = [[Exp14] instanceof [TypeName]]
+  Exp2.Econdition = [[Exp3] ? [Exp] : [Exp2]]
+  Exp3.Elor = [[Exp3] || [Exp4]]
+  Exp4.Eland = [[Exp4] && [Exp5]]
+  Exp5.Ebitor = [[Exp5] | [Exp6]]
+  Exp6.Ebitexor = [[Exp6] ^ [Exp7]]
+  Exp7.Ebitand = [[Exp7] & [Exp8]]
+  Exp8.Eeq = [[Exp8] == [Exp9]]
+  Exp8.Eneq = [[Exp8] != [Exp9]]
+  Exp9.Elthen = [[Exp9] < [Exp10]]
+  Exp9.Egrthen = [[Exp9] > [Exp10]]
+  Exp9.Ele = [[Exp9] <= [Exp10]]
+  Exp9.Ege = [[Exp9] >= [Exp10]]
+  Exp10.Eleft = [[Exp10] << [Exp11]]
+  Exp10.Eright = [[Exp10] >> [Exp11]]
+  Exp10.Etrip = [[Exp10] >>> [Exp11]]
+  Exp11.Eplus = [[Exp11] + [Exp12]]
+  Exp11.Eminus = [[Exp11] - [Exp12]]
+  Exp12.Etimes = [[Exp12] * [Exp13]]
+  Exp12.Ediv = [[Exp12] / [Exp13]]
+  Exp12.Emod = [[Exp12] % [Exp13]]
+  Exp13.Ebcoercion = [( [BasicType] ) [Exp13]]
+  Exp13.Eexpcoercion = [( [Exp] ) [Exp15]]
+  Exp13.Earrcoercion = [( [{ID "."}+] [{BracketsOpt ""}+] ) [Exp13]]
+  Exp14.Epreop = [[Unaryoperator] [Exp13]]
+  Exp14.Epreinc = [++ [Exp14]]
+  Exp14.Epredec = [-- [Exp14]]
+  Exp15.Epostinc = [[Exp15] ++]
+  Exp15.Epostdec = [[Exp15] --]
+  Exp16.Especname = SpecName
+  Exp16.Earr = ArrAcc
+  Exp16.Emth = MthCall
+  Exp16.Efld = FieldAcc
+  Exp16.Econst = Constant
+  Exp16.Estring = STRING
+  Exp17.Enewalloc = NewAlloc
+  Exp18.Evar = [[{ID "."}+]]
+  SpecName.SSsuper = [super]
+  SpecName.SSthis = [this]
+  SpecName.SSnull = [null]
+  NewAlloc.Anewclass = [new [TypeName] [Args]]
+  NewAlloc.Anewinnerclass = [new [TypeName] [Args] { [{FieldDeclaration ""}*]"" }]
+  NewAlloc.Anewarray = [new [TypeName] [{DimExpr " "}*]]
+  NewAlloc.Anewarriempty = [new [TypeName] [{DimExpr " "}*] { }]
+  NewAlloc.Anewarrinits = [new [TypeName] [{DimExpr " "}*] { [ArrayInits] }]
+  ArrAcc.Aarr = <<{ID "."}+> [ <Exp> ]>
+  ArrAcc.Aarr1 = <<SpecExp> [ <Exp> ]>
+  SpecExp.Cep = [( [Exp] )]
+  SpecExp.Cnp = SpecExpNP
+  SpecExp.Cthis = SpecName
+  SpecExpNP.CNLit = Constant
+  SpecExpNP.CNParr = ArrAcc
+  SpecExpNP.CNPmth = MthCall
+  SpecExpNP.CNPfld = FieldAcc
+  MthCall.Mmth = [[{ID "."}+] [Args]]
+  MthCall.Mmth1 = [[SpecExpNP] [Args]]
+  MthCall.Mmthspec = [[SpecName] [Args]]
+  FieldAcc.Ffvar = [[SpecExp] . [ID]]
+  FieldAcc.Ffvar1 = [[NewAlloc] . [ID]]
+  FieldAcc.Ffthis = [[{ID "."}+] .this]
+  FieldAcc.Fclass = [[{ID "."}+] .class]
+  FieldAcc.Ffclass2 = [[BasicType] .class]
+  Args.Args = [( [{Exp ","}*] )]
+  DimExpr.DimExpr = <[ <Exp> ]>
+  Constant.Efloat = JDouble
+  Constant.Echar = JChar
+  Constant.Eunicode = UnicodeChar
+  Constant.Eunsigned = Unsigned
+  Constant.Elong = Long
+  Constant.Eunsignlong = UnsignedLong
+  Constant.Ehexadec = Hexadecimal
+  Constant.Ehexaunsign = HexUnsigned
+  Constant.Ehexalong = HexLong
+  Constant.Ehexaunslong = HexUnsLong
+  Constant.Eoctal = Octal
+  Constant.Eoctalunsign = OctalUnsigned
+  Constant.Eoctallong = OctalLong
+  Constant.Eoctalunslong = OctalUnsLong
+  Constant.Ecdouble = JDouble
+  Constant.Ecfloat = JFloat
+  Constant.Eclongdouble = JLongDouble
+  Constant.Eint = INT
+  Constant.Etrue = [true]
+  Constant.Efalse = [false]
+  Unaryoperator.Plus = [+]
+  Unaryoperator.Negative = [-]
+  Unaryoperator.Complement = [~]
+  Unaryoperator.Logicalneg = [!]
+  Assignmentop.Assign = [=]
+  Assignmentop.AssignMul = [*=]
+  Assignmentop.AssignDiv = [/=]
+  Assignmentop.AssignMod = [%=]
+  Assignmentop.AssignAdd = [+=]
+  Assignmentop.AssignSub = [-=]
+  Assignmentop.AssignLeft = [<<=]
+  Assignmentop.AssignRight = [>>=]
+  Assignmentop.AssignTrip = [>>>=]
+  Assignmentop.AssignAnd = [&=]
+  Assignmentop.AssignXor = [^=]
+  Assignmentop.AssignOr = [|=]
+  Semi.Sem1 = [;]
+lexical syntax
+  Unsigned = [123456789] ([0-9])* 'u' | 'U'
+  Long = [123456789] ([0-9])* 'l' | 'L'
+  UnsignedLong = [123456789] ([0-9])* 'u' 'l' | 'U' 'L'
+  Hexadecimal = '0' 'x' | 'X' ([0-9] | [abcdef] | [ABCDEF])+
+  HexUnsigned = '0' 'x' | 'X' ([0-9] | [abcdef] | [ABCDEF])+ 'u' | 'U'
+  HexLong = '0' 'x' | 'X' ([0-9] | [abcdef] | [ABCDEF])+ 'l' | 'L'
+  HexUnsLong = '0' 'x' | 'X' ([0-9] | [abcdef] | [ABCDEF])+ 'u' 'l' | 'U' 'L'
+  Octal = '0' ([01234567])*
+  OctalUnsigned = '0' ([01234567])* 'u' | 'U'
+  OctalLong = '0' ([01234567])* 'l' | 'L'
+  OctalUnsLong = '0' ([01234567])* 'u' 'l' | 'U' 'L'
+  JDouble = ([0-9])+ '.' | '.' ([0-9])+ ('e' | 'E' ('-')? ([0-9])+)? | ([0-9])+ 'e' | 'E' ('-')? ([0-9])+ | ([0-9])+ '.' ([0-9])+ 'E' ('-')? ([0-9])+
+  JFloat = ([0-9])+ '.' ([0-9])+ | ([0-9])+ '.' | '.' ([0-9])+ ('e' | 'E' ('-')? ([0-9])+)? 'f' | 'F' | ([0-9])+ 'e' | 'E' ('-')? ([0-9])+ 'f' | 'F'
+  JLongDouble = ([0-9])+ '.' ([0-9])+ | ([0-9])+ '.' | '.' ([0-9])+ ('e' | 'E' ('-')? ([0-9])+)? 'l' | 'L' | ([0-9])+ 'e' | 'E' ('-')? ([0-9])+ 'l' | 'L'
+  UnicodeChar = '\'' '\\' 'u' [0-9] | [abcdef] | [ABCDEF] [0-9] | [abcdef] | [ABCDEF] [0-9] | [abcdef] | [ABCDEF] [0-9] | [abcdef] | [ABCDEF] '\''
+  JChar = '\'' /* ~[] - ['\] */ | '\\' [\'\ntr] '\''

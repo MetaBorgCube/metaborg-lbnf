@@ -1,0 +1,25 @@
+module Prolog
+imports Common
+context-free syntax
+  Database.Db = {Clause "."}*"."
+  Clause.Fact = Predicate
+  Clause.Rule = [[Predicate] :- [{Predicate ","}+]]
+  Clause.Directive = [:- [{Predicate ","}+]]
+  Predicate.APred = Atom
+  Predicate.CPred = [[Atom] ( [{Term ","}+] )]
+  Term.TAtom = Atom
+  Term.VarT = Var
+  Term.Complex = [[Atom] ( [{Term ","}+] )]
+  Term.TList = List
+  Atom.Atm = LIdent
+  Atom.EAtm = [\' [ID] \']
+  Var.V = UIdent
+  Var.A = Wild
+  List.Empty = <[ ]>
+  List.Enum = <[ <{Term ","}+> ]>
+  List.Cons = <[ <{Term ","}+> | <List> ]>
+  List.ConsV = <[ <{Term ","}+> | <Var> ]>
+lexical syntax
+  UIdent = [A-Z] ([A-Za-z] | [0-9] | '_')*
+  LIdent = [a-z] ([A-Za-z] | [0-9] | '_')*
+  Wild = '_' (~[])*

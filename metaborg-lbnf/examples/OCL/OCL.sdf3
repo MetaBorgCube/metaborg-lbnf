@@ -1,0 +1,234 @@
+module OCL
+imports Common
+context-free syntax
+  
+  OCLfile.OCLf = {OCLPackage ""}+
+  
+  OCLPackage.Pack = [package [PackageName] [OCLExpressions] endpackage]
+  
+  PackageName.PackName = PathName
+  
+  OCLExpressions.Constraints = {Constrnt ""}*
+  
+  Constrnt.Constr = [[ContextDeclaration] [{ConstrBody ""}+]]
+  
+  ConstrBody.CBDefNamed = [def [ID] : [{LetExpression ""}+]]
+  
+  ConstrBody.CBDef = [def : [{LetExpression ""}+]]
+  
+  ConstrBody.CBNamed = [[Stereotype] [ID] : [OCLExpression]]
+  
+  ConstrBody.CB = [[Stereotype] : [OCLExpression]]
+  
+  ContextDeclaration.CDOper = [context [OperationContext]]
+  
+  ContextDeclaration.CDClassif = [context [ClassifierContext]]
+  
+  ClassifierContext.CCType = [[ID] : [ID]]
+  
+  ClassifierContext.CC = ID
+  
+  OperationContext.OpC = [[ID] :: [OperationName] ( [{FormalParameter ","}*] )]
+  
+  OperationContext.OpCRT = [[ID] :: [OperationName] ( [{FormalParameter ","}*] ) : [ReturnType]]
+  
+  Stereotype.Pre = [pre]
+  
+  Stereotype.Post = [post]
+  
+  Stereotype.Inv = [inv]
+  
+  OperationName.OpName = ID
+  
+  OperationName.Eq = [=]
+  
+  OperationName.Add = [+]
+  
+  OperationName.Sub = [-]
+  
+  OperationName.LST = [<]
+  
+  OperationName.LSTE = [<=]
+  
+  OperationName.GRT = [>]
+  
+  OperationName.GRTE = [>=]
+  
+  OperationName.Div = [/]
+  
+  OperationName.Mult = [*]
+  
+  OperationName.NEq = [<>]
+  
+  OperationName.Impl = [implies]
+  
+  OperationName.Not = [not]
+  
+  OperationName.Or = [or]
+  
+  OperationName.Xor = [xor]
+  
+  OperationName.And = [and]
+  
+  FormalParameter.FP = [[ID] : [TypeSpecifier]]
+  
+  TypeSpecifier.TSsimple = SimpleTypeSpecifier
+  
+  TypeSpecifier.TScoll = CollectionType
+  
+  CollectionType.CT = [[CollectionKind] ( [SimpleTypeSpecifier] )]
+  
+  ReturnType.RT = TypeSpecifier
+  
+  OCLExpression.OCLExp = Expression
+  
+  OCLExpression.OCLExpLet = [[{LetExpression ""}+] in [Expression]]
+  
+  LetExpression.LENoParam = [let [ID] = [Expression]]
+  
+  LetExpression.LENoParamType = [let [ID] : [TypeSpecifier] = [Expression]]
+  
+  LetExpression.LE = [let [ID] ( [{FormalParameter ","}*] ) = [Expression]]
+  
+  LetExpression.LEType = [let [ID] ( [{FormalParameter ","}*] ) : [TypeSpecifier] = [Expression]]
+  
+  IfExpression.IfExp = [if [Expression] then [Expression] else [Expression] endif]
+  
+  Expression.EOpImpl = [[Expression] implies [Expression1]]
+  
+  Expression1.EOpLog = [[Expression1] [LogicalOperator] [Expression2]]
+  
+  Expression2.EOpEq = [[Expression2] [EqualityOperator] [Expression3]]
+  
+  Expression3.EOpRel = [[Expression3] [RelationalOperator] [Expression4]]
+  
+  Expression4.EOpAdd = [[Expression4] [AddOperator] [Expression5]]
+  
+  Expression5.EOpMul = [[Expression5] [MultiplyOperator] [Expression6]]
+  
+  Expression6.EOpUn = [[UnaryOperator] [Expression7]]
+  
+  Expression7.EExplPropCall = [[Expression7] [PostfixOperator] [PropertyCall]]
+  
+  Expression7.EMessage = [[Expression7] ^ [PathName] ( [{MessageArg ","}*] )]
+  
+  Expression8.EImplPropCall = PropertyCall
+  
+  Expression8.ELitColl = LiteralCollection
+  
+  Expression8.ELit = OCLLiteral
+  
+  Expression8.EIfExp = IfExpression
+  
+  Expression8.ENull = [null]
+  
+  MessageArg.MAExpr = Expression
+  
+  MessageArg.MAUnspec = [?]
+  
+  MessageArg.MAUnspecTyped = [? : [TypeSpecifier]]
+  
+  PropertyCall.PCall = [[PathName] [PossTimeExpression] [PossQualifiers] [PossPropCallParam]]
+  
+  PathName.PathN = {PName "::"}+
+  
+  PName.PN = ID
+  
+  PossQualifiers.NoQual = []
+  
+  PossQualifiers.Qual = Qualifiers
+  
+  Qualifiers.Quals = <[ <{Expression ","}*> ]>
+  
+  PossTimeExpression.NoTE = []
+  
+  PossTimeExpression.AtPre = [@ pre]
+  
+  PossPropCallParam.NoPCP = []
+  
+  PossPropCallParam.PCPs = PropertyCallParameters
+  
+  Declarator.Decl = [[DeclaratorVarList] |]
+  
+  Declarator.DeclAcc = [[DeclaratorVarList] ; [ID] : [TypeSpecifier] = [Expression] |]
+  
+  DeclaratorVarList.DVL = {ID ","}+
+  
+  DeclaratorVarList.DVLType = [[{ID ","}+] : [SimpleTypeSpecifier]]
+  
+  PropertyCallParameters.PCPNoDeclNoParam = [( )]
+  
+  PropertyCallParameters.PCPConcrete = [( [Expression] [{PCPHelper ""}*] )]
+  
+  PCPHelper.PCPComma = [, [Expression]]
+  
+  PCPHelper.PCPColon = [: [SimpleTypeSpecifier]]
+  
+  PCPHelper.PCPIterate = [; [ID] : [TypeSpecifier] = [Expression]]
+  
+  PCPHelper.PCPBar = [| [Expression]]
+  
+  OCLLiteral.LitStr = STRING
+  
+  OCLLiteral.LitNum = OCLNumber
+  
+  OCLLiteral.LitBoolTrue = [true]
+  
+  OCLLiteral.LitBoolFalse = [false]
+  
+  SimpleTypeSpecifier.STSpec = PathName
+  
+  LiteralCollection.LCollection = [[CollectionKind] { [{CollectionItem ","}+] }]
+  
+  LiteralCollection.LCollectionEmpty = [[CollectionKind] { }]
+  
+  CollectionItem.CI = Expression
+  
+  CollectionItem.CIRange = [[Expression] .. [Expression]]
+  
+  OCLNumber.NumInt = INT
+  
+  OCLNumber.NumDouble = Double
+  
+  LogicalOperator.LAnd = [and]
+  
+  LogicalOperator.LOr = [or]
+  
+  LogicalOperator.LXor = [xor]
+  
+  CollectionKind.Set = [Set]
+  
+  CollectionKind.Bag = [Bag]
+  
+  CollectionKind.Sequence = [Sequence]
+  
+  CollectionKind.Collection = [Collection]
+  
+  EqualityOperator.EEq = [=]
+  
+  EqualityOperator.ENEq = [<>]
+  
+  RelationalOperator.RGT = [>]
+  
+  RelationalOperator.RGTE = [>=]
+  
+  RelationalOperator.RLT = [<]
+  
+  RelationalOperator.RLTE = [<=]
+  
+  AddOperator.AAdd = [+]
+  
+  AddOperator.ASub = [-]
+  
+  MultiplyOperator.MMult = [*]
+  
+  MultiplyOperator.MDiv = [/]
+  
+  UnaryOperator.UMin = [-]
+  
+  UnaryOperator.UNot = [not]
+  
+  PostfixOperator.PDot = [.]
+  
+  PostfixOperator.PArrow = [->]
+  
